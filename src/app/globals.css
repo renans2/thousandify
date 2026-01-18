@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-green-surface: #12873D;
+  --color-green-surface-dark: #005C22;
+  --color-green-bg-1: #004E1D;
+  --color-green-bg-2: #00782C;
+  --color-text-secondary: #D7D7D7;
+  --text-shadow-h1: 4px 4px 2px rgba(0, 0, 0, 0.40);
+  --text-shadow-regular: 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-roboto), system-ui, sans-serif;
 }
