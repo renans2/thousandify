@@ -23,10 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${roboto.variable} antialiased`}>
-      <body className="bg-linear-to-b from-green-bg-1 to-green-bg-2 text-white h-screen">
-        <Warning />
-        <Header />
-        {children}
+      <body className="bg-green-bg-2 text-white h-screen">
+        <div className="overflow-y-scroll h-full">
+          <Warning />
+          <Header />
+          {children}
+        </div>
       </body>
     </html>
   );
