@@ -1,9 +1,17 @@
 "use client";
 
+import useLocalStorage from "@/hooks/useLocalStorage";
 import Link from "next/link";
 import { ImCross } from "react-icons/im";
 
 export default function Warning() {
+  const {
+    data: [showWarning, setShowWarning],
+    hydrated,
+  } = useLocalStorage<boolean>("SHOW_WARNING", true);
+
+  if (!showWarning || !hydrated) return;
+
   return (
     <div className="bg-black text-white flex justify-center items-center py-1 relative">
       <p>
@@ -14,7 +22,7 @@ export default function Warning() {
         to know more ⚠️
       </p>
       <button
-        onClick={() => console.log("123")}
+        onClick={() => setShowWarning(false)}
         className="absolute right-4 cursor-pointer rounded-4xl p-1"
       >
         <ImCross />
