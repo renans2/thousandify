@@ -1,12 +1,30 @@
 @import "tailwindcss";
 
+:root {
+  --background: #EDEDED;
+  --table-border: #464646;
+  --table-data: #000000;
+  --input-border: #666666;
+  --heading: #353535;
+  --description: #696969;
+}
+
+.dark {
+  --background: #101010;
+  --table-border: #979797;
+  --table-data: #DBDBDB;
+  --input-border: #F6F6F6;
+  --heading: #DBDBDB;
+  --description: #696969;
+}
+
 @theme {
-  --color-background-light: #EDEDED;
-  --color-table-border: #464646;
-  --color-table-data: #000000;
-  --color-input-border: #666666;
-  --color-heading: #353535;
-  --color-description: #696969;
+  --color-background: var(--background);
+  --color-table-border: var(--table-border);
+  --color-table-data: var(--table-data);
+  --color-input-border: var(--input-border);
+  --color-heading: var(--heading);
+  --color-description: var(--description);
   --text-shadow-heading: 3px 3px 0px rgba(0, 0, 0, 0.25);
   --text-shadow-regular: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
