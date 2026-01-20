@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ToggleTheme from "../ui/ToggleTheme";
 
 export default function Header() {
   return (
@@ -23,6 +24,7 @@ export default function Header() {
       <h3 className="mt-2 text-description font-medium">
         Spotify Artists Ranking by monthly listeners (updated daily)
       </h3>
+      <ToggleTheme />
     </header>
   );
 }
