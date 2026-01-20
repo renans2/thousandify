@@ -1,14 +1,13 @@
-import { Roboto } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import Warning from "@/components/layout/Warning";
 import Header from "@/components/layout/Header";
 
-const roboto = Roboto({
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
-  variable: "--font-roboto",
-  display: "swap",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -22,13 +21,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} antialiased`}>
-      <body className="bg-green-bg-2 text-white h-screen">
-        <div className="overflow-y-scroll h-full">
-          <Warning />
-          <Header />
-          {children}
-        </div>
+    <html lang="en" className={`${geistMono.variable} antialiased`}>
+      <body className="bg-background-light text-black h-screen">
+        <Warning />
+        <Header />
+        {children}
       </body>
     </html>
   );
