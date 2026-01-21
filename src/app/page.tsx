@@ -6,7 +6,7 @@ export default function Home() {
     <div className="max-w-250 mx-auto">
       <div className="flex justify-end items-center">
         <div className="flex items-center">
-          <div className="relative flex items-center">
+          {/* <div className="relative flex items-center">
             <input
               className="border-2 border-input-border placeholder-[rgba(0,0,0,0.4)] py-1 pl-10 rounded-lg focus:outline-3 outline-gray-400"
               type="text"
@@ -19,7 +19,7 @@ export default function Home() {
               size={24}
               color="#666666"
             />
-          </div>
+          </div> */}
         </div>
       </div>
       <table className="w-full mt-5">
@@ -39,13 +39,13 @@ export default function Home() {
               className="hover:scale-102 hover:font-bold transition-transform border-b border-table-border text-table-data"
             >
               <td className="text-left py-1 px-2">{artist.position}</td>
-              <td className=" py-1 px-2">
+              <td className="py-1 px-2">
                 <a
                   href={`https://open.spotify.com/artist/${artist.spotify_id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   title={`${artist.artist_name}'s Spotify profile`}
-                  className="hover:underline"
+                  className="underline md:no-underline hover:underline"
                 >
                   {artist.artist_name}
                 </a>
