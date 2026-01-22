@@ -6,6 +6,11 @@ import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { useState } from "react";
 
+const ICON_PARAMS = {
+  size: 32,
+  className: "text-heading",
+};
+
 export default function Header() {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
 
@@ -40,7 +45,11 @@ export default function Header() {
             className="md:hidden cursor-pointer"
             onClick={() => setMenuIsOpen((prev) => !prev)}
           >
-            {menuIsOpen ? <RxCross2 size={32} /> : <IoMdMenu size={32} />}
+            {menuIsOpen ? (
+              <RxCross2 {...ICON_PARAMS} />
+            ) : (
+              <IoMdMenu {...ICON_PARAMS} />
+            )}
           </button>
         </div>
         <h3 className="hidden md:block mt-2 text-description font-medium">
@@ -49,7 +58,7 @@ export default function Header() {
       </header>
       {/* mobile nav */}
       {menuIsOpen && (
-        <div className="md:hidden py-2 bg-background inset-x-0 border-y-2">
+        <div className="md:hidden py-2 mb-6 bg-background inset-x-0 border-y-2 border-border">
           <nav>
             <ul className="flex flex-col gap-2 font-bold text-heading">
               <li>

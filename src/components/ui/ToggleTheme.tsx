@@ -2,8 +2,13 @@
 
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { useEffect } from "react";
-import { IoIosMoon } from "react-icons/io";
+import { HiMoon } from "react-icons/hi2";
 import { MdLightMode } from "react-icons/md";
+
+const THEME_ICON_PARAMS = {
+  size: 24,
+  className: "text-heading",
+};
 
 export default function ToggleTheme() {
   const {
@@ -18,13 +23,13 @@ export default function ToggleTheme() {
 
   return (
     <button
-      className="p-1 cursor-pointer hover:bg-gray-300 rounded-lg"
+      className="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
       onClick={() => setIsDarkTheme((prev) => !prev)}
     >
       {isDarkTheme ? (
-        <MdLightMode size={24} color="#353535" />
+        <MdLightMode {...THEME_ICON_PARAMS} />
       ) : (
-        <IoIosMoon size={24} color="#353535" />
+        <HiMoon {...THEME_ICON_PARAMS} />
       )}
     </button>
   );
