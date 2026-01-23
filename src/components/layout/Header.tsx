@@ -53,7 +53,7 @@ export default function Header() {
           </button>
         </div>
         <h3 className="hidden md:block mt-2 text-description font-medium">
-          Spotify Artists Ranking by monthly listeners (updated daily)
+          Top 1000 Spotify Artists by monthly listeners
         </h3>
       </header>
       {/* mobile nav */}

@@ -1,8 +1,24 @@
 import { TrendDown, TrendStable, TrendUp } from "@/components/ui/Trends";
-import { DATA } from "@/constants/data";
+import { createClient } from "@/lib/supabase/server";
+import { ArtistDailyStat } from "@/types/ArtistTypes";
 import { IoSearch } from "react-icons/io5";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const today = new Date().toISOString().split("T")[0];
+  const { data: _data, error } = await supabase
+    .from("artist_daily_stat")
+    .select(
+      `
+      *,
+      artist(name, spotify_id)
+    `,
+    )
+    .eq("date", today);
+  const data = [..._data!] as ArtistDailyStat[];
+  console.log(data);
+  // console.log(error);
+
   return (
     <div className="max-w-250 mx-auto">
       <div className="flex justify-end items-center">
@@ -28,40 +44,39 @@ export default function Home() {
           </tr>
         </thead>
         <tbody className="">
-          {DATA.map((artist) => {
-            const random = Math.floor(Math.random() * 10);
-            return (
-              <tr
-                key={artist.spotify_id}
-                className="hover:scale-102 hover:font-bold transition-transform border-b border-border text-table-data"
-              >
-                <td className="flex gap-2 items-center text-left py-1 px-2">
-                  {random % 2 == 0 ? (
-                    <TrendUp />
-                  ) : random >= 7 ? (
-                    <TrendStable />
-                  ) : (
-                    <TrendDown />
-                  )}
-                  {artist.position}
-                </td>
-                <td className="py-1 px-2">
-                  <a
-                    href={`https://open.spotify.com/artist/${artist.spotify_id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={`${artist.artist_name}'s Spotify profile`}
-                    className="underline md:no-underline hover:underline"
-                  >
-                    {artist.artist_name}
-                  </a>
-                </td>
-                <td className="text-left py-1 px-2">
-                  {artist.monthly_listeners}
-                </td>
-              </tr>
-            );
-          })}
+          {data.map(({ artist, position, monthly_listeners, trend }) => (
+            <tr
+              key={artist.spotify_id}
+              className="hover:scale-102 hover:font-bold transition-transform border-b border-border text-table-data"
+            >
+              <td className="flex gap-2 items-center text-left py-1 px-2">
+                {trend === "up" ? (
+                  <TrendUp />
+                ) : trend === "down" ? (
+                  <TrendDown />
+                ) : trend === "stable" ? (
+                  <TrendStable />
+                ) : (
+                  <></>
+                )}
+                {position}
+              </td>
+              <td className="py-1 px-2">
+                <a
+                  href={`https://open.spotify.com/artist/${artist.spotify_id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={`${artist.name}'s Spotify profile`}
+                  className="underline md:no-underline hover:underline"
+                >
+                  {artist.name}
+                </a>
+              </td>
+              <td className="text-left py-1 px-2">
+                {monthly_listeners.toLocaleString("en-US")}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
