@@ -13,17 +13,11 @@ export default async function Home() {
   // const today = new Date().toISOString().split("T")[0];
   const { data: _data, error } = await supabase
     .from("artist_daily_stat")
-    .select(
-      `
-      *,
-      artist(*)
-    `,
-    )
+    .select("*, artist(*)")
     .eq("date", "2026-01-30")
     .order("position", { ascending: true });
-  const data = [..._data!] as ArtistDailyStat[];
+  const data: ArtistDailyStat[] = _data ?? [];
   // console.log(data);
-  // console.log(error);
 
   return (
     <div className="max-w-250 mx-auto">
@@ -49,7 +43,7 @@ export default async function Home() {
             </th>
           </tr>
         </thead>
-        <tbody className="">
+        <tbody>
           {data.map(
             ({
               artist,
