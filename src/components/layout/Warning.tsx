@@ -13,8 +13,8 @@ export default function Warning() {
   if (!showWarning || !hydrated) return;
 
   return (
-    <div className="bg-black text-white flex justify-center items-center py-1 relative">
-      <p>
+    <div className="pr-6 text-xs md:text-base bg-warning-bg text-warning-text flex justify-center items-center py-1 relative">
+      <p className="text-center">
         ⚠️ This is not an official Spotify website, click{" "}
         <Link href="/about" className="underline">
           here
@@ -23,7 +23,7 @@ export default function Warning() {
       </p>
       <button
         onClick={() => setShowWarning(false)}
-        className="absolute right-4 cursor-pointer rounded-4xl p-1"
+        className="absolute right-1 cursor-pointer rounded-4xl p-1"
       >
         <ImCross />
       </button>

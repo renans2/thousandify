@@ -9,13 +9,16 @@
   --description: #696969;
   --position-bg: #353535;
   --position-text: #FFF;
+  --input: #353535;
+  --warning-bg: #000;
+  --warning-text: #FFF;
   --tag-text-red: var(--color-red-600);
   --tag-bg-red: color-mix(in oklab, var(--color-red-500) 25%, transparent);
   --tag-bg-green: color-mix(in oklab, var(--color-green-500) 25%, transparent);
   --tag-text-green: var(--color-green-700);
   --tag-text-blue: var(--color-blue-600);
   --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 25%, transparent);
-  --tag-text-yellow: var(--color-yellow-500);
+  --tag-text-yellow: var(--color-yellow-600);
   --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 25%, transparent);
 }
 
@@ -28,6 +31,9 @@
   --description: #696969;
   --position-bg: #DBDBDB;
   --position-text: #000;
+  --input: #DBDBDB;
+  --warning-bg: #FFF;
+  --warning-text: #000;
   --tag-text-red: var(--color-red-400);
   --tag-bg-red: color-mix(in oklab, var(--color-red-500) 15%, transparent);
   --tag-text-green: var(--color-green-400);
@@ -47,6 +53,9 @@
   --color-description: var(--description);
   --color-position-bg: var(--position-bg);
   --color-position-text: var(--position-text);
+  --color-input: var(--input);
+  --color-warning-bg: var(--warning-bg);
+  --color-warning-text: var(--warning-text);
   --color-tag-text-red: var(--tag-text-red);
   --color-tag-bg-red: var(--tag-bg-red);
   --color-tag-text-green: var(--tag-text-green);

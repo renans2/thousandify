@@ -17,11 +17,11 @@ export default function Trend({
     );
   if (positionOffset > 0)
     return (
-      <div className="mx-auto rounded-l-4xl rounded-r-4xl w-fit md:w-12 bg-tag-bg-red py-1 px-2 flex items-center justify-evenly border-tag-text-red">
+      <div className="mx-auto rounded-l-4xl rounded-r-4xl w-12 bg-tag-bg-red py-1 px-2 flex items-center justify-evenly border-tag-text-red">
         <IoTriangleSharp
           {...TREND_ICON_PROPS}
           strokeWidth={0}
-          className="hidden md:flex text-tag-text-red rotate-180"
+          className="text-tag-text-red rotate-180"
         />
         <span className="text-tag-text-red text-xs">-{positionOffset}</span>
       </div>

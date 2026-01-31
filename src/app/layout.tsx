@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistMono.variable} antialiased`}>
-      <body className="bg-background text-black h-screen px-4">
+      <body className="bg-background h-screen">
         <Warning />
         <Header />
         {children}
