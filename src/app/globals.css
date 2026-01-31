@@ -7,6 +7,16 @@
   --table-data: #000000;
   --heading: #353535;
   --description: #696969;
+  --position-bg: #353535;
+  --position-text: #FFF;
+  --tag-text-red: var(--color-red-600);
+  --tag-bg-red: color-mix(in oklab, var(--color-red-500) 25%, transparent);
+  --tag-bg-green: color-mix(in oklab, var(--color-green-500) 25%, transparent);
+  --tag-text-green: var(--color-green-700);
+  --tag-text-blue: var(--color-blue-600);
+  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 25%, transparent);
+  --tag-text-yellow: var(--color-yellow-500);
+  --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 25%, transparent);
 }
 
 .dark {
@@ -16,6 +26,16 @@
   --table-data: #DBDBDB;
   --heading: #DBDBDB;
   --description: #696969;
+  --position-bg: #DBDBDB;
+  --position-text: #000;
+  --tag-text-red: var(--color-red-400);
+  --tag-bg-red: color-mix(in oklab, var(--color-red-500) 15%, transparent);
+  --tag-text-green: var(--color-green-400);
+  --tag-bg-green: color-mix(in oklab, var(--color-green-500) 15%, transparent);
+  --tag-text-blue: var(--color-blue-400);
+  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 20%, transparent);
+  --tag-text-yellow: var(--color-yellow-400);
+  --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 15%, transparent);
 }
 
 @theme {
@@ -25,6 +45,16 @@
   --color-table-data: var(--table-data);
   --color-heading: var(--heading);
   --color-description: var(--description);
+  --color-position-bg: var(--position-bg);
+  --color-position-text: var(--position-text);
+  --color-tag-text-red: var(--tag-text-red);
+  --color-tag-bg-red: var(--tag-bg-red);
+  --color-tag-text-green: var(--tag-text-green);
+  --color-tag-bg-green: var(--tag-bg-green);
+  --color-tag-text-blue: var(--tag-text-blue);
+  --color-tag-bg-blue: var(--tag-bg-blue);
+  --color-tag-text-yellow: var(--tag-text-yellow);
+  --color-tag-bg-yellow: var(--tag-bg-yellow);
   --text-shadow-heading: 3px 3px 0px rgba(0, 0, 0, 0.25);
   --text-shadow-regular: 2px 2px 0px rgba(0, 0, 0, 0.2);
 }
