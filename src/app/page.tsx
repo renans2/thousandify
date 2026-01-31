@@ -1,3 +1,5 @@
+export const revalidate = 86400;
+
 import ListScript from "@/components/list-script";
 import Trend from "@/components/ui/Trends";
 import { createClient } from "@/lib/supabase/server";
