@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Warning from "@/components/layout/Warning";
 import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -26,6 +27,7 @@ export default function RootLayout({
         <Warning />
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );

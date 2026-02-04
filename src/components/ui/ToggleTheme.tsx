@@ -13,7 +13,7 @@ const THEME_ICON_PARAMS = {
 export default function ToggleTheme() {
   const {
     data: [isDarkTheme, setIsDarkTheme],
-  } = useLocalStorage<boolean>("IS_DARK_THEME", false);
+  } = useLocalStorage<boolean>("IS_DARK_THEME", true);
 
   useEffect(() => {
     isDarkTheme

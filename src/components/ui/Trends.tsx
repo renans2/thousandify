@@ -11,28 +11,29 @@ export default function Trend({
 }) {
   if (positionOffset === null)
     return (
-      <div className="mx-auto text-tag-text-yellow text-xs rounded-l-4xl rounded-r-4xl bg-tag-bg-yellow p-1 flex items-center justify-evenly w-12 border-tag-text-yellow">
-        NEW
+      <div className="w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto text-tag-text-yellow text-xs rounded-l-4xl rounded-r-4xl bg-tag-bg-yellow flex items-center justify-evenly border-tag-text-yellow">
+        <span className="hidden md:flex">NEW</span>
+        <span className="md:hidden">N</span>
       </div>
     );
   if (positionOffset > 0)
     return (
-      <div className="mx-auto rounded-l-4xl rounded-r-4xl w-12 bg-tag-bg-red py-1 px-2 flex items-center justify-evenly border-tag-text-red">
+      <div className="w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto rounded-l-4xl rounded-r-4xl bg-tag-bg-red flex items-center justify-evenly border-tag-text-red">
         <IoTriangleSharp
           {...TREND_ICON_PROPS}
           strokeWidth={0}
-          className="text-tag-text-red rotate-180"
+          className="hidden md:flex text-tag-text-red rotate-180"
         />
         <span className="text-tag-text-red text-xs">-{positionOffset}</span>
       </div>
     );
   else if (positionOffset < 0)
     return (
-      <div className="mx-auto rounded-l-4xl rounded-r-4xl bg-tag-bg-green p-1 flex items-center justify-evenly w-12 border-tag-text-green">
+      <div className="w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto rounded-l-4xl rounded-r-4xl bg-tag-bg-green flex items-center justify-evenly border-tag-text-green">
         <IoTriangleSharp
           {...TREND_ICON_PROPS}
           strokeWidth={0}
-          className="text-tag-text-green"
+          className="hidden md:flex text-tag-text-green"
         />
         <span className="text-tag-text-green text-xs">
           +{Math.abs(positionOffset)}
@@ -41,8 +42,8 @@ export default function Trend({
     );
   else
     return (
-      <div className="mx-auto rounded-l-4xl rounded-r-4xl bg-tag-bg-blue p-1 flex items-center justify-evenly w-12 border-tag-text-blue h-6.5">
-        <div className="w-5.5 h-1 bg-tag-text-blue rounded-4xl" />
+      <div className="w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto rounded-l-4xl rounded-r-4xl bg-tag-bg-blue flex items-center justify-evenly border-tag-text-blue h-6.5">
+        <div className="w-4 md:w-5 h-1 bg-tag-text-blue rounded-4xl" />
       </div>
     );
 }
