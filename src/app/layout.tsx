@@ -4,6 +4,7 @@ import "./globals.css";
 import Warning from "@/components/layout/Warning";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { ThemeProvider } from "../components/theme-provider";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -22,12 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistMono.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${geistMono.variable} antialiased`}
+      suppressHydrationWarning
+    >
       <body className="bg-background h-screen">
-        <Warning />
-        <Header />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <Warning />
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

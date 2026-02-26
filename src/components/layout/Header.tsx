@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import ToggleTheme from "../ui/ToggleTheme";
+import ThemeSwitch from "../ui/ThemeSwitch";
 import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { FaGithub } from "react-icons/fa";
@@ -70,7 +70,7 @@ export default function Header() {
             <nav>{navList}</nav>
             <span className="text-heading text-3xl">|</span>
             <div className="flex items-center gap-1">
-              <ToggleTheme />
+              <ThemeSwitch />
               {GITHUB_BUTTON}
             </div>
           </div>
@@ -96,7 +96,7 @@ export default function Header() {
         <div className="px-4 md:hidden py-2 mb-6 bg-background inset-x-0 border-y-2 border-border">
           <nav>{navList}</nav>
           <div className="mt-4 flex items-center justify-center gap-4">
-            <ToggleTheme />
+            <ThemeSwitch />
             {GITHUB_BUTTON}
           </div>
         </div>
