@@ -57,7 +57,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="max-w-250 mx-auto px-4 py-6 md:py-12 md:px-8">
+      <header className="max-w-250 mx-auto px-4 pt-12 pb-6 md:pt-16 md:pb-12 md:px-8">
         <div className="flex items-center justify-between relative">
           <Link href="/">
             <h1 className="text-4xl font-black md:text-5xl text-heading text-shadow-heading">

@@ -13,7 +13,7 @@ export default function Warning() {
   if (!showWarning || !hydrated) return;
 
   return (
-    <div className="pr-6 text-xs md:text-base bg-warning-bg text-warning-text flex justify-center items-center py-1 relative">
+    <div className="absolute w-full pr-6 text-xs md:text-base bg-warning-bg text-warning-text flex justify-center items-center py-1">
       <p className="text-center">
         ⚠️ This is not an official Spotify website, click{" "}
         <Link href="/about" className="underline">
