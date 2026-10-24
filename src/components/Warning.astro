@@ -1,0 +1,39 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<div
+  id="warning"
+  hidden
+  class="absolute w-full pr-6 text-xs md:text-base bg-warning-bg text-warning-text flex justify-center items-center py-1"
+>
+  <p class="text-center">
+    ⚠️ This is not an official Spotify website, click{" "}
+    <a href="/about" class="underline">here</a>{" "}
+    to know more ⚠️
+  </p>
+  <button
+    id="warning-close"
+    class="absolute right-1 cursor-pointer rounded-4xl p-1"
+    aria-label="Dismiss warning"
+  >
+    <Icon name="cross" size={16} />
+  </button>
+</div>
+
+<!-- inline so the warning shows up right away instead of after the page loads -->
+<script is:inline>
+  (() => {
+    const warning = document.getElementById("warning");
+    try {
+      if (localStorage.getItem("SHOW_WARNING") === "false") return;
+    } catch {}
+    warning.hidden = false;
+    document.getElementById("warning-close").addEventListener("click", () => {
+      warning.hidden = true;
+      try {
+        localStorage.setItem("SHOW_WARNING", "false");
+      } catch {}
+    });
+  })();
+</script>

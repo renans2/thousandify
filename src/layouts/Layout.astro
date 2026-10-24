@@ -1,0 +1,41 @@
+---
+import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Warning from "../components/Warning.astro";
+---
+
+<!doctype html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Thousandify</title>
+    <meta
+      name="description"
+      content="Spotify Artists Ranking by monthly listeners (updated daily)"
+    />
+    <!-- applies the theme before the first paint to avoid flicker; "theme" is
+    the same key next-themes used, so saved preferences carry over -->
+    <script is:inline>
+      (() => {
+        let theme = "system";
+        try {
+          theme = localStorage.getItem("theme") ?? "system";
+        } catch {}
+        const dark =
+          theme === "dark" ||
+          (theme === "system" &&
+            matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.classList.toggle("dark", dark);
+        document.documentElement.style.colorScheme = dark ? "dark" : "light";
+      })();
+    </script>
+  </head>
+  <body class="bg-background h-screen">
+    <Warning />
+    <Header />
+    <slot />
+    <Footer />
+  </body>
+</html>

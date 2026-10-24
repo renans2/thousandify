@@ -1,0 +1,140 @@
+---
+import Icon from "../components/Icon.astro";
+import Trend from "../components/Trend.astro";
+import Layout from "../layouts/Layout.astro";
+import { supabase } from "../lib/supabase";
+import type { ArtistDailyStat } from "../types/ArtistTypes";
+
+// the daily job doesn't run at midnight UTC, so "today" may have no data yet:
+// always show the most recent update instead
+const { data: lastUpdate, error: updateError } = await supabase
+  .from("update_logs")
+  .select("date")
+  .order("date", { ascending: false })
+  .order("time", { ascending: false })
+  .limit(1)
+  .maybeSingle();
+if (updateError) throw updateError;
+
+let data: ArtistDailyStat[] = [];
+if (lastUpdate) {
+  const { data: stats, error } = await supabase
+    .from("artists_daily_stats")
+    .select("*, artist(*)")
+    .eq("date", lastUpdate.date)
+    .order("position", { ascending: true });
+  if (error) throw error;
+  data = stats ?? [];
+}
+---
+
+<Layout>
+  {
+    !lastUpdate ? (
+      <p class="text-center text-heading font-medium pb-20">
+        No data available yet, check back later.
+      </p>
+    ) : (
+      <div id="data" class="max-w-250 mx-auto text-xs md:text-base">
+        <div class="px-2 md:px-8 flex gap-2 md:gap-0 flex-col items-center md:flex-row md:justify-between">
+          <p class="font-medium text-base text-heading">
+            Last update: {lastUpdate.date}
+          </p>
+          <div class="text-base w-full md:w-fit relative flex items-center">
+            <input
+              class="search w-full border-2 border-input text-input placeholder-input/50 py-1 pl-10 rounded-lg md:rounded-full focus:outline-3 outline-border"
+              type="text"
+              placeholder="Filter artist"
+              aria-label="Filter artist"
+            />
+            <Icon name="search" class="text-input absolute left-2.25" />
+          </div>
+        </div>
+        <div class="overflow-x-auto pb-20 md:px-8">
+          <table class="sortable w-full mt-5">
+            <thead class="bg-background z-1 cursor-pointer">
+              <tr class="border-b-2 border-border text-table-data">
+                <th class="hover:bg-heading/10 text-center py-2 px-2 font-extrabold">
+                  #
+                </th>
+                <th class="hover:bg-heading/10 text-center py-2 px-0 font-extrabold">
+                  Trend
+                </th>
+                <th class="hover:bg-heading/10 text-left py-1 pl-2 font-extrabold">
+                  Artist
+                </th>
+                <th class="hover:bg-heading/10 text-right py-1 px-2 font-extrabold">
+                  Listeners
+                </th>
+                <th class="hover:bg-heading/10 text-left py-1 px-2 font-extrabold">
+                  Daily
+                </th>
+              </tr>
+            </thead>
+            <tbody class="list">
+              {data.map(
+                ({
+                  artist,
+                  position,
+                  monthly_listeners,
+                  position_offset,
+                  monthly_listeners_daily_offset,
+                }) => (
+                  <tr class="hover:font-extrabold transition-transform border-b border-border text-table-data">
+                    <td class="text-center py-1">{position}</td>
+                    <td class="w-full block mx-auto py-1">
+                      <Trend positionOffset={position_offset} />
+                    </td>
+                    <td class="artist py-1 pl-2">
+                      <a
+                        href={`https://open.spotify.com/artist/${artist.spotify_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={`${artist.name}'s Spotify profile`}
+                        class="underline md:no-underline hover:underline"
+                      >
+                        {artist.name}
+                      </a>
+                    </td>
+                    <td class="text-right py-1 px-2">
+                      {monthly_listeners.toLocaleString("en-US")}
+                    </td>
+                    <td class="py-1 px-2">
+                      {monthly_listeners_daily_offset !== null && (
+                        <span
+                          class:list={[
+                            "py-1 px-2 text-xs rounded-4xl",
+                            monthly_listeners_daily_offset > 0
+                              ? "bg-tag-bg-green text-tag-text-green"
+                              : monthly_listeners_daily_offset < 0
+                                ? "bg-tag-bg-red text-tag-text-red"
+                                : "bg-tag-bg-blue text-tag-text-blue",
+                          ]}
+                        >
+                          {monthly_listeners_daily_offset > 0 && "+"}
+                          {monthly_listeners_daily_offset.toLocaleString(
+                            "en-US",
+                          )}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ),
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    )
+  }
+
+  <!-- filter by artist name (list.js) and sort by column (sort-table.js, picks up
+  tables with the "sortable" class on its own) -->
+  <script
+    is:inline
+    defer
+    src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"
+    onload="document.getElementById('data') && new List('data', { valueNames: ['artist'] })"
+  ></script>
+  <script is:inline defer src="/sort-table.js"></script>
+</Layout>

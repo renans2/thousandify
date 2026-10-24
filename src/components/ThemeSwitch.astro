@@ -1,0 +1,43 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<button
+  class="theme-switch p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
+  aria-label="Toggle theme"
+>
+  <Icon name="sun" class="text-heading hidden dark:block" />
+  <Icon name="moon" class="text-heading dark:hidden" />
+</button>
+
+<script>
+  const root = document.documentElement;
+  const systemDark = matchMedia("(prefers-color-scheme: dark)");
+
+  function applyTheme(dark: boolean) {
+    root.classList.toggle("dark", dark);
+    root.style.colorScheme = dark ? "dark" : "light";
+  }
+
+  function savedTheme() {
+    try {
+      return localStorage.getItem("theme") ?? "system";
+    } catch {
+      return "system";
+    }
+  }
+
+  for (const button of document.querySelectorAll(".theme-switch")) {
+    button.addEventListener("click", () => {
+      const dark = !root.classList.contains("dark");
+      applyTheme(dark);
+      try {
+        localStorage.setItem("theme", dark ? "dark" : "light");
+      } catch {}
+    });
+  }
+
+  systemDark.addEventListener("change", (event) => {
+    if (savedTheme() === "system") applyTheme(event.matches);
+  });
+</script>

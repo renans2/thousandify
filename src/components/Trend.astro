@@ -1,0 +1,46 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  positionOffset: number | null;
+}
+
+const { positionOffset } = Astro.props;
+const base =
+  "w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto rounded-l-4xl rounded-r-4xl flex items-center justify-evenly";
+---
+
+{
+  positionOffset === null ? (
+    <div
+      class={`${base} text-tag-text-yellow text-xs bg-tag-bg-yellow border-tag-text-yellow`}
+    >
+      <span class="hidden md:flex">NEW</span>
+      <span class="md:hidden">N</span>
+    </div>
+  ) : positionOffset > 0 ? (
+    <div class={`${base} bg-tag-bg-red border-tag-text-red`}>
+      <Icon
+        name="triangle"
+        size={15}
+        class="hidden md:flex text-tag-text-red rotate-180"
+      />
+      <span class="text-tag-text-red text-xs">-{positionOffset}</span>
+    </div>
+  ) : positionOffset < 0 ? (
+    <div class={`${base} bg-tag-bg-green border-tag-text-green`}>
+      <Icon
+        name="triangle"
+        size={15}
+        class="hidden md:flex text-tag-text-green"
+      />
+      <span class="text-tag-text-green text-xs">
+        +{Math.abs(positionOffset)}
+      </span>
+    </div>
+  ) : (
+    <div class={`${base} bg-tag-bg-blue border-tag-text-blue h-6.5`}>
+      <div class="w-4 md:w-5 h-1 bg-tag-text-blue rounded-4xl" />
+    </div>
+  )
+}

@@ -1,0 +1,119 @@
+---
+import Icon from "./Icon.astro";
+import ThemeSwitch from "./ThemeSwitch.astro";
+
+const path = Astro.url.pathname;
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" },
+].filter(({ href }) => href !== path);
+---
+
+<header class="max-w-250 mx-auto px-4 pt-12 pb-6 md:pt-16 md:pb-12 md:px-8">
+  <div class="flex items-center justify-between relative">
+    <a href="/">
+      <h1
+        class="text-4xl font-black md:text-5xl text-heading text-shadow-heading"
+      >
+        Thousandify
+      </h1>
+    </a>
+
+    {/* desktop */}
+    <div class="hidden md:flex items-center gap-2">
+      <nav>
+        <ul class="space-y-2 font-bold text-heading">
+          {
+            links.map(({ href, label }) => (
+              <li class="text-center md:text-left">
+                <a
+                  href={href}
+                  class="text-xl underline md:no-underline md:hover:underline"
+                >
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <span class="text-heading text-3xl">|</span>
+      <div class="flex items-center gap-1">
+        <ThemeSwitch />
+        <a
+          href="https://github.com/renans2/thousandify"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub repository"
+          class="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
+        >
+          <Icon name="github" class="text-heading" />
+        </a>
+      </div>
+    </div>
+
+    <button
+      id="menu-button"
+      class="md:hidden cursor-pointer"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <Icon name="menu" size={32} class="menu-open text-heading" />
+      <Icon name="close" size={32} class="menu-close hidden text-heading" />
+    </button>
+  </div>
+  <h3 class="hidden md:block mt-2 text-description font-medium">
+    Top 1000 Spotify Artists by monthly listeners
+  </h3>
+</header>
+
+{/* mobile nav */}
+<div
+  id="mobile-nav"
+  hidden
+  class="px-4 md:hidden py-2 mb-6 bg-background inset-x-0 border-y-2 border-border"
+>
+  <nav>
+    <ul class="space-y-2 font-bold text-heading">
+      {
+        links.map(({ href, label }) => (
+          <li class="text-center md:text-left">
+            <a
+              href={href}
+              class="text-xl underline md:no-underline md:hover:underline"
+            >
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="mt-4 flex items-center justify-center gap-4">
+    <ThemeSwitch />
+    <a
+      href="https://github.com/renans2/thousandify"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="GitHub repository"
+      class="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
+    >
+      <Icon name="github" class="text-heading" />
+    </a>
+  </div>
+</div>
+
+<script>
+  const button = document.getElementById("menu-button")!;
+  const nav = document.getElementById("mobile-nav")!;
+
+  button.addEventListener("click", () => {
+    const open = Boolean(nav.hidden);
+    nav.hidden = !open;
+    button.setAttribute("aria-expanded", String(open));
+    button.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    button.querySelector(".menu-open")!.classList.toggle("hidden", open);
+    button.querySelector(".menu-close")!.classList.toggle("hidden", !open);
+  });
+</script>
