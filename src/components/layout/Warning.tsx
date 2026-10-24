@@ -23,6 +23,7 @@ export default function Warning() {
       </p>
       <button
         onClick={() => setShowWarning(false)}
+        aria-label="Dismiss warning"
         className="absolute right-1 cursor-pointer rounded-4xl p-1"
       >
         <ImCross />

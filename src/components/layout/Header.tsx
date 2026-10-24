@@ -5,7 +5,6 @@ import ThemeSwitch from "../ui/ThemeSwitch";
 import { IoMdMenu } from "react-icons/io";
 import { RxCross2 } from "react-icons/rx";
 import { FaGithub } from "react-icons/fa";
-import { RxDividerVertical } from "react-icons/rx";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -18,6 +17,8 @@ const GITHUB_BUTTON = (
   <a
     href="https://github.com/renans2/thousandify"
     target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GitHub repository"
     className="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
   >
     <FaGithub size={24} className="text-heading" />
@@ -77,6 +78,7 @@ export default function Header() {
           {/* - */}
           <button
             className="md:hidden cursor-pointer"
+            aria-label={menuIsOpen ? "Close menu" : "Open menu"}
             onClick={() => setMenuIsOpen((prev) => !prev)}
           >
             {menuIsOpen ? (

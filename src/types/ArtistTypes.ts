@@ -9,6 +9,6 @@ export type ArtistDailyStat = {
   artist: Artist;
   position: number;
   monthly_listeners: number;
-  position_offset: number;
-  monthly_listeners_daily_offset: number;
+  position_offset: number | null;
+  monthly_listeners_daily_offset: number | null;
 };

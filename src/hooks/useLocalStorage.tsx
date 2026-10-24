@@ -1,21 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
+
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    listeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
 
 export default function useLocalStorage<T>(key: string, defaultData: T) {
-  const [data, setData] = useState<T>(defaultData);
-  const [hydrated, setHydrated] = useState(false);
+  // undefined on the server and during hydration, string | null after
+  const saved = useSyncExternalStore(
+    subscribe,
+    () => localStorage.getItem(key),
+    () => undefined,
+  );
+  const hydrated = saved !== undefined;
 
-  useEffect(() => {
-    const saved = localStorage.getItem(key);
-    if (saved) setData(JSON.parse(saved));
-    setHydrated(true);
-  }, []);
+  const data = useMemo<T>(
+    () => (saved ? JSON.parse(saved) : defaultData),
+    [saved, defaultData],
+  );
 
-  useEffect(() => {
-    if (!hydrated) return;
-    localStorage.setItem(key, JSON.stringify(data));
-  }, [data, hydrated]);
+  const setData = useCallback(
+    (value: T) => {
+      localStorage.setItem(key, JSON.stringify(value));
+      listeners.forEach((listener) => listener());
+    },
+    [key],
+  );
 
   return {
     data: [data, setData] as const,
