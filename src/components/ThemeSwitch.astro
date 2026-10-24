@@ -27,15 +27,15 @@ import Icon from "./Icon.astro";
     }
   }
 
-  for (const button of document.querySelectorAll(".theme-switch")) {
-    button.addEventListener("click", () => {
-      const dark = !root.classList.contains("dark");
-      applyTheme(dark);
-      try {
-        localStorage.setItem("theme", dark ? "dark" : "light");
-      } catch {}
-    });
-  }
+  // delegated, since the buttons live inside the React header island
+  document.addEventListener("click", (event) => {
+    if (!(event.target as Element).closest(".theme-switch")) return;
+    const dark = !root.classList.contains("dark");
+    applyTheme(dark);
+    try {
+      localStorage.setItem("theme", dark ? "dark" : "light");
+    } catch {}
+  });
 
   systemDark.addEventListener("change", (event) => {
     if (savedTheme() === "system") applyTheme(event.matches);
