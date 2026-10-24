@@ -26,6 +26,14 @@ if (lastUpdate) {
   if (error) throw error;
   data = stats ?? [];
 }
+
+const COLUMNS = [
+  { key: "position", label: "#", align: "text-center" },
+  { key: "trend", label: "Trend", align: "text-center" },
+  { key: "artist", label: "Artist", align: "text-left" },
+  { key: "listeners", label: "Listeners", align: "text-right" },
+  { key: "daily", label: "Daily", align: "text-right" },
+];
 ---
 
 <Layout>
@@ -35,59 +43,55 @@ if (lastUpdate) {
         No data available yet, check back later.
       </p>
     ) : (
-      <div id="data" class="max-w-250 mx-auto text-xs md:text-base">
-        <div class="px-2 md:px-8 flex gap-2 md:gap-0 flex-col items-center md:flex-row md:justify-between">
-          <p class="font-medium text-base text-heading">
-            Last update: {lastUpdate.date}
+      <div class="max-w-250 mx-auto text-xs md:text-base">
+        <div class="px-4 md:px-8 flex gap-3 flex-col md:flex-row md:items-center md:justify-between">
+          <p class="text-sm md:text-base text-description">
+            Last update:{" "}
+            <time datetime={lastUpdate.date} class="text-heading font-medium">
+              {lastUpdate.date}
+            </time>
           </p>
-          <div class="text-base w-full md:w-fit relative flex items-center">
+          <div class="text-base w-full md:w-72 relative flex items-center">
             <input
               id="artist-search"
-              class="w-full border-2 border-input text-input placeholder-input/50 py-1 pl-10 rounded-lg md:rounded-full focus:outline-3 outline-border"
-              type="text"
+              class="peer w-full border-2 border-input text-input placeholder-input/50 bg-transparent py-1 pl-10 pr-10 rounded-full outline-none focus:border-accent focus:ring-4 focus:ring-accent/20 transition-shadow"
+              type="search"
               placeholder="Filter artist"
               aria-label="Filter artist"
+              autocomplete="off"
+              spellcheck="false"
             />
-            <IoSearch className="text-input absolute left-2.25" size={24} />
+            <IoSearch
+              className="text-input absolute left-3 pointer-events-none"
+              size={20}
+            />
+            <kbd
+              class="hidden md:block peer-focus:hidden absolute right-3 px-1.5 rounded border border-divider text-xs text-description pointer-events-none"
+              title="Press / to search"
+            >
+              /
+            </kbd>
           </div>
         </div>
-        <div class="overflow-x-auto pb-20 md:px-8">
-          <table id="ranking" class="w-full mt-5">
-            <thead class="bg-background z-1 cursor-pointer select-none">
-              <tr class="border-b-2 border-border text-table-data">
-                <th
-                  data-sort="position"
-                  class="hover:bg-heading/10 text-center py-2 px-2 font-extrabold"
-                >
-                  #
-                </th>
-                <th
-                  data-sort="trend"
-                  class="hover:bg-heading/10 text-center py-2 px-0 font-extrabold"
-                >
-                  Trend
-                </th>
-                <th
-                  data-sort="artist"
-                  class="hover:bg-heading/10 text-left py-1 pl-2 font-extrabold"
-                >
-                  Artist
-                </th>
-                <th
-                  data-sort="listeners"
-                  class="hover:bg-heading/10 text-right py-1 px-2 font-extrabold"
-                >
-                  Listeners
-                </th>
-                <th
-                  data-sort="daily"
-                  class="hover:bg-heading/10 text-left py-1 px-2 font-extrabold"
-                >
-                  Daily
-                </th>
+        <div class="overflow-x-auto md:overflow-x-visible pb-20 px-1 md:px-8">
+          <table id="ranking" role="table" class="w-full min-w-[23rem] mt-5">
+            <thead role="rowgroup" class="md:sticky md:top-0 z-10 bg-background cursor-pointer select-none shadow-[inset_0_-2px_0_var(--border)]">
+              <tr role="row" class="text-table-data">
+                {COLUMNS.map(({ key, label, align }) => (
+                  <th
+                    role="columnheader"
+                    data-sort={key}
+                    class:list={[
+                      "py-2.5 px-1 md:px-2 font-bold uppercase md:tracking-wider text-[0.7rem] md:text-xs whitespace-nowrap hover:bg-heading/10 transition-colors",
+                      align,
+                    ]}
+                  >
+                    {label}
+                  </th>
+                ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
               {data.map(
                 ({
                   artist,
@@ -97,36 +101,45 @@ if (lastUpdate) {
                   monthly_listeners_daily_offset,
                 }) => (
                   <tr
-                    class="hover:font-extrabold transition-transform border-b border-border text-table-data"
+                    role="row"
+                    class="border-b border-divider text-table-data hover:bg-heading/5 transition-colors"
                     data-position={position}
                     data-trend={position_offset === null ? "" : -position_offset}
                     data-artist={artist.name.toLowerCase()}
                     data-listeners={monthly_listeners}
                     data-daily={monthly_listeners_daily_offset ?? ""}
                   >
-                    <td class="text-center py-1">{position}</td>
-                    <td class="w-full block mx-auto py-1">
+                    <td role="cell" class="text-center py-1.5 px-1 md:px-2">
+                      {position <= 3 ? (
+                        <span class="inline-flex items-center justify-center size-5 md:size-6 rounded-full bg-position-bg text-position-text text-xs font-bold">
+                          {position}
+                        </span>
+                      ) : (
+                        position
+                      )}
+                    </td>
+                    <td role="cell" class="py-1.5 px-0.5 md:px-1">
                       <Trend positionOffset={position_offset} />
                     </td>
-                    <td class="py-1 pl-2">
+                    <td role="cell" class="py-1.5 px-1 md:px-2">
                       <a
                         href={`https://open.spotify.com/artist/${artist.spotify_id}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         title={`${artist.name}'s Spotify profile`}
-                        class="underline md:no-underline hover:underline"
+                        class="underline decoration-heading/20 underline-offset-4 hover:decoration-accent hover:text-heading transition-colors"
                       >
                         {artist.name}
                       </a>
                     </td>
-                    <td class="text-right py-1 px-2">
+                    <td role="cell" class="text-right py-1.5 px-1 md:px-2 tabular-nums">
                       {monthly_listeners.toLocaleString("en-US")}
                     </td>
-                    <td class="py-1 px-2">
+                    <td role="cell" class="text-right py-1.5 px-1 md:px-2">
                       {monthly_listeners_daily_offset !== null && (
                         <span
                           class:list={[
-                            "py-1 px-2 text-xs rounded-4xl",
+                            "inline-block py-0.5 px-1.5 md:px-2 text-xs font-medium tabular-nums rounded-full",
                             monthly_listeners_daily_offset > 0
                               ? "bg-tag-bg-green text-tag-text-green"
                               : monthly_listeners_daily_offset < 0
@@ -144,8 +157,8 @@ if (lastUpdate) {
                   </tr>
                 ),
               )}
-              <tr id="no-results" hidden>
-                <td colspan="5" class="text-center py-4 text-description">
+              <tr id="no-results" role="row" hidden>
+                <td role="cell" class="col-span-full text-center py-8 text-description">
                   No artists found
                 </td>
               </tr>
@@ -155,7 +168,6 @@ if (lastUpdate) {
       </div>
     )
   }
-
 </Layout>
 
 <script>
@@ -224,29 +236,66 @@ if (lastUpdate) {
     search.addEventListener("input", applyFilter);
     // the browser may restore the input's text on reload or back navigation
     applyFilter();
+
+    // "/" focuses the search, Escape clears it
+    document.addEventListener("keydown", (event) => {
+      const target = event.target as HTMLElement;
+      if (event.key === "/" && !target.closest("input, textarea")) {
+        event.preventDefault();
+        search.focus();
+      }
+    });
+    search.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      search.value = "";
+      applyFilter();
+      search.blur();
+    });
   }
 </script>
 
 <style>
+  /* the table is laid out as a grid of rows (roles above keep it a table for
+  screen readers) for two reasons:
+  - fixed column widths, so columns don't jump while the rows stream in or
+    when the web font loads
+  - content-visibility works on grid rows but not on table rows: off-screen
+    rows skip rendering, which makes switching the theme much faster */
+  #ranking,
+  #ranking thead,
+  #ranking tbody {
+    display: block;
+  }
+  #ranking tr {
+    display: grid;
+    grid-template-columns: 2.5rem 3.5rem minmax(0, 1fr) 5.5rem 5.25rem;
+    align-items: center;
+  }
+  @media (width >= 48rem) {
+    #ranking tr {
+      grid-template-columns: 4rem 5rem minmax(0, 1fr) 9rem 7rem;
+    }
+  }
+  #ranking tbody tr {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 2.3rem;
+  }
+
   /* every sortable header always keeps a fixed slot for the sort indicator, so
   showing it never changes the column width or spills into the next cell */
   th[data-sort]::before,
   th[data-sort]::after {
     display: inline-block;
-    width: 1.5em;
-    font-size: 0.6em;
+    width: 1.4em;
+    font-size: 0.75em;
     text-align: center;
-    vertical-align: middle;
+    vertical-align: 0.1em;
+    color: var(--accent);
   }
 
-  /* left-aligned: indicator after the text */
+  /* left-aligned and centered: indicator after the text */
   th[data-sort]::after {
     content: attr(data-indicator);
-  }
-
-  /* centered: matching empty slot before the text keeps it centered */
-  th.text-center[data-sort]::before {
-    content: "";
   }
 
   /* right-aligned: indicator before the text, so it stays flush with the
@@ -256,5 +305,14 @@ if (lastUpdate) {
   }
   th.text-right[data-sort]::after {
     content: none;
+  }
+
+  th[aria-sort] {
+    color: var(--accent);
+  }
+
+  /* the "x" button on type="search" inputs; Escape clears instead */
+  #artist-search::-webkit-search-cancel-button {
+    display: none;
   }
 </style>

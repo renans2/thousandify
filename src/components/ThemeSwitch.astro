@@ -7,17 +7,25 @@ import { MdLightMode } from "react-icons/md";
   class="theme-switch p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
   aria-label="Toggle theme"
 >
-  <MdLightMode size={24} className="text-heading hidden dark:block" />
-  <HiMoon size={24} className="text-heading dark:hidden" />
+  <MdLightMode size={22} className="text-heading hidden dark:block" />
+  <HiMoon size={22} className="text-heading dark:hidden" />
 </button>
 
 <script>
   const root = document.documentElement;
   const systemDark = matchMedia("(prefers-color-scheme: dark)");
 
+  // transitions are turned off while switching, otherwise every row, link and
+  // tag animates its colors at once
   function applyTheme(dark: boolean) {
+    const noTransitions = document.createElement("style");
+    noTransitions.textContent =
+      "*,*::before,*::after{transition:none!important}";
+    document.head.append(noTransitions);
     root.classList.toggle("dark", dark);
     root.style.colorScheme = dark ? "dark" : "light";
+    getComputedStyle(root).colorScheme; // apply the new styles before re-enabling
+    requestAnimationFrame(() => noTransitions.remove());
   }
 
   function savedTheme() {

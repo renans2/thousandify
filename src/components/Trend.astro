@@ -6,41 +6,34 @@ interface Props {
 }
 
 const { positionOffset } = Astro.props;
+// same pill shape as the Daily tags, fixed width so the column stays aligned
 const base =
-  "w-7.5 md:w-12 p-0 py-1 md:p-1 mx-auto rounded-l-4xl rounded-r-4xl flex items-center justify-evenly";
+  "w-7.5 md:w-14 h-6 mx-auto rounded-full flex items-center justify-center gap-1 text-xs font-medium";
 ---
 
 {
   positionOffset === null ? (
-    <div
-      class={`${base} text-tag-text-yellow text-xs bg-tag-bg-yellow border-tag-text-yellow`}
-    >
-      <span class="hidden md:flex">NEW</span>
+    <div class={`${base} bg-tag-bg-yellow text-tag-text-yellow`}>
+      <span class="hidden md:inline">NEW</span>
       <span class="md:hidden">N</span>
     </div>
   ) : positionOffset > 0 ? (
-    <div class={`${base} bg-tag-bg-red border-tag-text-red`}>
+    <div class={`${base} bg-tag-bg-red text-tag-text-red`}>
       <IoTriangleSharp
-        size={15}
+        size={9}
         strokeWidth={0}
-        className="hidden md:flex text-tag-text-red rotate-180"
+        className="hidden md:block rotate-180"
       />
-      <span class="text-tag-text-red text-xs">-{positionOffset}</span>
+      <span>-{positionOffset}</span>
     </div>
   ) : positionOffset < 0 ? (
-    <div class={`${base} bg-tag-bg-green border-tag-text-green`}>
-      <IoTriangleSharp
-        size={15}
-        strokeWidth={0}
-        className="hidden md:flex text-tag-text-green"
-      />
-      <span class="text-tag-text-green text-xs">
-        +{Math.abs(positionOffset)}
-      </span>
+    <div class={`${base} bg-tag-bg-green text-tag-text-green`}>
+      <IoTriangleSharp size={9} strokeWidth={0} className="hidden md:block" />
+      <span>+{Math.abs(positionOffset)}</span>
     </div>
   ) : (
-    <div class={`${base} bg-tag-bg-blue border-tag-text-blue h-6.5`}>
-      <div class="w-4 md:w-5 h-1 bg-tag-text-blue rounded-4xl" />
+    <div class={`${base} bg-tag-bg-blue`}>
+      <div class="w-3 md:w-4 h-0.5 bg-tag-text-blue rounded-full" />
     </div>
   )
 }

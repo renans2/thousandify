@@ -7,58 +7,61 @@
   --background: #EDEDED;
   --background-icon-hover: #D5D5D5;
   --border: #464646;
-  --table-data: #000000;
+  --divider: color-mix(in oklab, #464646 22%, transparent);
+  --table-data: #111111;
   --heading: #353535;
   --description: #696969;
+  --accent: var(--color-green-600);
+  --heading-shadow: rgba(0, 0, 0, 0.25);
   --position-bg: #353535;
   --position-text: #FFF;
   --input: #353535;
-  --warning-bg: #000;
-  --warning-text: #FFF;
   --tag-text-red: var(--color-red-600);
-  --tag-bg-red: color-mix(in oklab, var(--color-red-500) 25%, transparent);
-  --tag-bg-green: color-mix(in oklab, var(--color-green-500) 25%, transparent);
+  --tag-bg-red: color-mix(in oklab, var(--color-red-500) 18%, transparent);
   --tag-text-green: var(--color-green-700);
+  --tag-bg-green: color-mix(in oklab, var(--color-green-500) 20%, transparent);
   --tag-text-blue: var(--color-blue-600);
-  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 25%, transparent);
-  --tag-text-yellow: var(--color-yellow-600);
-  --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 25%, transparent);
+  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 18%, transparent);
+  --tag-text-yellow: var(--color-yellow-700);
+  --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 22%, transparent);
 }
 
 .dark {
   --background: #101010;
   --background-icon-hover: #2A2A2A;
   --border: #979797;
+  --divider: color-mix(in oklab, #979797 22%, transparent);
   --table-data: #DBDBDB;
   --heading: #DBDBDB;
-  --description: #696969;
+  --description: #8C8C8C;
+  --accent: var(--color-green-400);
+  --heading-shadow: rgba(255, 255, 255, 0.15);
   --position-bg: #DBDBDB;
   --position-text: #000;
   --input: #DBDBDB;
-  --warning-bg: #FFF;
-  --warning-text: #000;
   --tag-text-red: var(--color-red-400);
   --tag-bg-red: color-mix(in oklab, var(--color-red-500) 15%, transparent);
   --tag-text-green: var(--color-green-400);
   --tag-bg-green: color-mix(in oklab, var(--color-green-500) 15%, transparent);
   --tag-text-blue: var(--color-blue-400);
-  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 20%, transparent);
+  --tag-bg-blue: color-mix(in oklab, var(--color-blue-500) 18%, transparent);
   --tag-text-yellow: var(--color-yellow-400);
   --tag-bg-yellow: color-mix(in oklab, var(--color-yellow-500) 15%, transparent);
 }
 
 @theme {
+  --font-mono: "Geist Mono", ui-monospace, monospace;
   --color-background: var(--background);
   --color-background-icon-hover: var(--background-icon-hover);
   --color-border: var(--border);
+  --color-divider: var(--divider);
   --color-table-data: var(--table-data);
   --color-heading: var(--heading);
   --color-description: var(--description);
+  --color-accent: var(--accent);
   --color-position-bg: var(--position-bg);
   --color-position-text: var(--position-text);
   --color-input: var(--input);
-  --color-warning-bg: var(--warning-bg);
-  --color-warning-text: var(--warning-text);
   --color-tag-text-red: var(--tag-text-red);
   --color-tag-bg-red: var(--tag-bg-red);
   --color-tag-text-green: var(--tag-text-green);
@@ -67,10 +70,13 @@
   --color-tag-bg-blue: var(--tag-bg-blue);
   --color-tag-text-yellow: var(--tag-text-yellow);
   --color-tag-bg-yellow: var(--tag-bg-yellow);
-  --text-shadow-heading: 3px 3px 0px rgba(0, 0, 0, 0.25);
-  --text-shadow-regular: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  --text-shadow-heading: 3px 3px 0px var(--heading-shadow);
 }
 
 body {
-  font-family: "Geist Mono", "Times New Roman", Times, serif;
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 30%, transparent);
 }
