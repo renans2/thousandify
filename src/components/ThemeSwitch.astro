@@ -3,12 +3,15 @@ import { HiMoon } from "react-icons/hi2";
 import { MdLightMode } from "react-icons/md";
 ---
 
-<button
-  class="theme-switch p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
-  aria-label="Toggle theme"
->
-  <MdLightMode size={22} className="text-heading hidden dark:block" />
-  <HiMoon size={22} className="text-heading dark:hidden" />
+<button class="theme-switch group p-2 rounded-full text-description hover:text-heading hover:bg-background-icon-hover cursor-pointer transition-colors" aria-label="Toggle theme">
+  <MdLightMode
+    size={20}
+    className="hidden dark:block text-amber-300 group-hover:rotate-45 transition-transform"
+  />
+  <HiMoon
+    size={20}
+    className="dark:hidden text-violet-500 group-hover:-rotate-12 transition-transform"
+  />
 </button>
 
 <script>

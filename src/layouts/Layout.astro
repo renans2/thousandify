@@ -14,12 +14,17 @@ import Header from "../components/Header.astro";
       name="description"
       content="Spotify Artists Ranking by monthly listeners (updated daily)"
     />
-    <meta name="theme-color" content="#EDEDED" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#101010" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4F4F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0B0B0F" media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- display font for the title, subset to just its letters (a few KB) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Unbounded:wght@800&text=Thousandify&display=swap"
       rel="stylesheet"
     />
     <!-- applies the theme before the first paint to avoid flicker; "theme" is
@@ -39,7 +44,7 @@ import Header from "../components/Header.astro";
       })();
     </script>
   </head>
-  <body class="bg-background text-table-data min-h-screen flex flex-col">
+  <body class="relative isolate bg-background text-table-data min-h-screen flex flex-col">
     <Header />
     <main class="flex-1">
       <slot />

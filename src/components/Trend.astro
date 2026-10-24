@@ -13,7 +13,7 @@ const base =
 
 {
   positionOffset === null ? (
-    <div class={`${base} bg-tag-bg-yellow text-tag-text-yellow`}>
+    <div class={`${base} bg-tag-bg-violet text-tag-text-violet`}>
       <span class="hidden md:inline">NEW</span>
       <span class="md:hidden">N</span>
     </div>
@@ -32,8 +32,8 @@ const base =
       <span>+{Math.abs(positionOffset)}</span>
     </div>
   ) : (
-    <div class={`${base} bg-tag-bg-blue`}>
-      <div class="w-3 md:w-4 h-0.5 bg-tag-text-blue rounded-full" />
+    <div class={`${base} bg-tag-bg-neutral`}>
+      <div class="w-3 md:w-4 h-0.5 bg-tag-text-neutral rounded-full" />
     </div>
   )
 }

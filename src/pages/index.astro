@@ -1,5 +1,6 @@
 ---
 import { IoSearch } from "react-icons/io5";
+import { RxCross2 } from "react-icons/rx";
 import Trend from "../components/Trend.astro";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
@@ -44,45 +45,67 @@ const COLUMNS = [
       </p>
     ) : (
       <div class="max-w-250 mx-auto text-xs md:text-base">
-        <div class="px-4 md:px-8 flex gap-3 flex-col md:flex-row md:items-center md:justify-between">
-          <p class="text-sm md:text-base text-description">
-            Last update:{" "}
+        <div class="px-4 md:px-8 flex gap-2 flex-col md:flex-row md:items-center md:justify-between">
+          <p class="self-start md:self-auto inline-flex items-center gap-2 text-sm text-description rounded-full border border-divider bg-background/60 pl-3 pr-3.5 py-1">
+            <span class="relative flex size-2">
+              <span class="absolute inline-flex size-full rounded-full bg-accent opacity-60 motion-safe:animate-ping"></span>
+              <span class="relative inline-flex size-2 rounded-full bg-accent"></span>
+            </span>
+            Last update:
             <time datetime={lastUpdate.date} class="text-heading font-medium">
               {lastUpdate.date}
             </time>
           </p>
-          <div class="text-base w-full md:w-72 relative flex items-center">
+          <div class="group relative w-full md:w-80 flex items-center">
             <input
               id="artist-search"
-              class="peer w-full border-2 border-input text-input placeholder-input/50 bg-transparent py-1 pl-10 pr-10 rounded-full outline-none focus:border-accent focus:ring-4 focus:ring-accent/20 transition-shadow"
+              class="peer w-full h-11 pl-11 pr-28 rounded-full border-2 border-divider bg-background/70 backdrop-blur-md text-base text-heading placeholder:text-description shadow-[0_1px_2px_rgb(0_0_0/0.06),inset_0_1px_0_rgb(255_255_255/0.04)] outline-none transition-[box-shadow,border-color] hover:border-border/40 focus:ring-4 focus:ring-accent/15"
               type="search"
-              placeholder="Filter artist"
-              aria-label="Filter artist"
+              placeholder="Search artists"
+              aria-label="Search artists"
               autocomplete="off"
               spellcheck="false"
             />
             <IoSearch
-              className="text-input absolute left-3 pointer-events-none"
-              size={20}
+              className="absolute left-4 text-description pointer-events-none transition-colors peer-focus:text-accent"
+              size={18}
             />
-            <kbd
-              class="hidden md:block peer-focus:hidden absolute right-3 px-1.5 rounded border border-divider text-xs text-description pointer-events-none"
-              title="Press / to search"
-            >
-              /
-            </kbd>
+            <div class="absolute right-2 flex items-center gap-1">
+              <span
+                id="search-count"
+                hidden
+                aria-live="polite"
+                class="px-2 py-0.5 rounded-full bg-accent/12 text-accent text-xs font-medium tabular-nums whitespace-nowrap"
+              ></span>
+              <button
+                id="search-clear"
+                type="button"
+                hidden
+                aria-label="Clear search"
+                class="p-1.5 rounded-full text-description hover:text-heading hover:bg-background-icon-hover cursor-pointer transition-colors"
+              >
+                <RxCross2 size={16} />
+              </button>
+              <kbd
+                id="search-hint"
+                class="hidden md:block group-focus-within:hidden mr-1.5 px-1.5 rounded-md border border-divider bg-background-icon-hover/50 text-xs text-description pointer-events-none"
+                title="Press / to search"
+              >
+                /
+              </kbd>
+            </div>
           </div>
         </div>
         <div class="overflow-x-auto md:overflow-x-visible pb-20 px-1 md:px-8">
-          <table id="ranking" role="table" class="w-full min-w-[23rem] mt-5">
-            <thead role="rowgroup" class="md:sticky md:top-0 z-10 bg-background cursor-pointer select-none shadow-[inset_0_-2px_0_var(--border)]">
-              <tr role="row" class="text-table-data">
+          <table id="ranking" role="table" class="w-full min-w-[23rem] mt-3">
+            <thead role="rowgroup" class="md:sticky md:top-0 z-10 bg-background cursor-pointer select-none">
+              <tr role="row">
                 {COLUMNS.map(({ key, label, align }) => (
                   <th
                     role="columnheader"
                     data-sort={key}
                     class:list={[
-                      "py-2.5 px-1 md:px-2 font-bold uppercase md:tracking-wider text-[0.7rem] md:text-xs whitespace-nowrap hover:bg-heading/10 transition-colors",
+                      "py-2.5 px-1 md:px-2 font-bold uppercase md:tracking-wider text-[0.7rem] md:text-xs whitespace-nowrap text-description hover:text-heading hover:bg-heading/5 transition-colors",
                       align,
                     ]}
                   >
@@ -102,7 +125,7 @@ const COLUMNS = [
                 }) => (
                   <tr
                     role="row"
-                    class="border-b border-divider text-table-data hover:bg-heading/5 transition-colors"
+                    class="border-b border-divider text-table-data hover:bg-linear-to-r hover:from-accent/12 hover:via-accent-2/5 hover:to-transparent"
                     data-position={position}
                     data-trend={position_offset === null ? "" : -position_offset}
                     data-artist={artist.name.toLowerCase()}
@@ -111,7 +134,7 @@ const COLUMNS = [
                   >
                     <td role="cell" class="text-center py-1.5 px-1 md:px-2">
                       {position <= 3 ? (
-                        <span class="inline-flex items-center justify-center size-5 md:size-6 rounded-full bg-position-bg text-position-text text-xs font-bold">
+                        <span class={`medal medal-${position} size-5 md:size-6 text-xs`}>
                           {position}
                         </span>
                       ) : (
@@ -144,7 +167,7 @@ const COLUMNS = [
                               ? "bg-tag-bg-green text-tag-text-green"
                               : monthly_listeners_daily_offset < 0
                                 ? "bg-tag-bg-red text-tag-text-red"
-                                : "bg-tag-bg-blue text-tag-text-blue",
+                                : "bg-tag-bg-neutral text-tag-text-neutral",
                           ]}
                         >
                           {monthly_listeners_daily_offset > 0 && "+"}
@@ -171,14 +194,17 @@ const COLUMNS = [
 </Layout>
 
 <script>
-  // sort by column and filter by artist name. Sorting reorders the rows and
-  // filtering only hides them, so one never undoes the other.
+  // sort by column and filter by artist name. Sorting only changes each row's
+  // CSS order and filtering only hides rows, so one never undoes the other.
   const table = document.getElementById("ranking") as HTMLTableElement | null;
 
   if (table) {
     const tbody = table.tBodies[0];
     const noResults = document.getElementById("no-results")!;
     const search = document.getElementById("artist-search") as HTMLInputElement;
+    const searchCount = document.getElementById("search-count")!;
+    const searchClear = document.getElementById("search-clear")!;
+    const searchHint = document.getElementById("search-hint")!;
     const headers = [
       ...table.querySelectorAll<HTMLTableCellElement>("th[data-sort]"),
     ];
@@ -203,8 +229,11 @@ const COLUMNS = [
       return sort!.ascending ? result : -result;
     }
 
+    // rows are reordered visually with CSS `order` (tbody is a flex column)
+    // instead of being moved in the DOM, which re-laid out all 1000 rows
     function applySort() {
-      tbody.prepend(...(sort ? rows.toSorted(compare) : rows));
+      if (sort) rows.toSorted(compare).forEach((row, i) => (row.style.order = String(i)));
+      else for (const row of rows) row.style.order = "";
       for (const header of headers) {
         const active = sort?.key === header.dataset.sort;
         header.dataset.indicator = active ? (sort!.ascending ? "▲" : "▼") : "";
@@ -221,6 +250,14 @@ const COLUMNS = [
         if (!row.hidden) visible++;
       }
       noResults.hidden = visible > 0;
+      searchCount.hidden = searchClear.hidden = !query;
+      searchHint.hidden = Boolean(query);
+      searchCount.textContent = `${visible} found`;
+    }
+
+    function clearSearch() {
+      search.value = "";
+      applyFilter();
     }
 
     for (const header of headers) {
@@ -247,9 +284,12 @@ const COLUMNS = [
     });
     search.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
-      search.value = "";
-      applyFilter();
+      clearSearch();
       search.blur();
+    });
+    searchClear.addEventListener("click", () => {
+      clearSearch();
+      search.focus();
     });
   }
 </script>
@@ -262,9 +302,16 @@ const COLUMNS = [
   - content-visibility works on grid rows but not on table rows: off-screen
     rows skip rendering, which makes switching the theme much faster */
   #ranking,
-  #ranking thead,
-  #ranking tbody {
+  #ranking thead {
     display: block;
+  }
+  #ranking tbody {
+    display: flex;
+    flex-direction: column;
+  }
+  /* always after the rows, whatever the sort */
+  #no-results {
+    order: 1000000;
   }
   #ranking tr {
     display: grid;
@@ -309,6 +356,28 @@ const COLUMNS = [
 
   th[aria-sort] {
     color: var(--accent);
+  }
+
+  /* accent gradient line under the table header */
+  #ranking thead {
+    background-image: linear-gradient(
+      90deg,
+      var(--accent),
+      var(--accent-2),
+      var(--accent-3)
+    );
+    background-size: 100% 2px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+  }
+
+  /* gradient border on the focused search input */
+  #artist-search:focus {
+    border-color: transparent;
+    background:
+      linear-gradient(var(--background), var(--background)) padding-box,
+      linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3))
+        border-box;
   }
 
   /* the "x" button on type="search" inputs; Escape clears instead */
