@@ -1,13 +1,14 @@
 ---
-import Icon from "./Icon.astro";
+import { HiMoon } from "react-icons/hi2";
+import { MdLightMode } from "react-icons/md";
 ---
 
 <button
   class="theme-switch p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
   aria-label="Toggle theme"
 >
-  <Icon name="sun" class="text-heading hidden dark:block" />
-  <Icon name="moon" class="text-heading dark:hidden" />
+  <MdLightMode size={24} className="text-heading hidden dark:block" />
+  <HiMoon size={24} className="text-heading dark:hidden" />
 </button>
 
 <script>

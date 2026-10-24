@@ -1,5 +1,5 @@
 ---
-import Icon from "./Icon.astro";
+import { IoTriangleSharp } from "react-icons/io5";
 
 interface Props {
   positionOffset: number | null;
@@ -20,19 +20,19 @@ const base =
     </div>
   ) : positionOffset > 0 ? (
     <div class={`${base} bg-tag-bg-red border-tag-text-red`}>
-      <Icon
-        name="triangle"
+      <IoTriangleSharp
         size={15}
-        class="hidden md:flex text-tag-text-red rotate-180"
+        strokeWidth={0}
+        className="hidden md:flex text-tag-text-red rotate-180"
       />
       <span class="text-tag-text-red text-xs">-{positionOffset}</span>
     </div>
   ) : positionOffset < 0 ? (
     <div class={`${base} bg-tag-bg-green border-tag-text-green`}>
-      <Icon
-        name="triangle"
+      <IoTriangleSharp
         size={15}
-        class="hidden md:flex text-tag-text-green"
+        strokeWidth={0}
+        className="hidden md:flex text-tag-text-green"
       />
       <span class="text-tag-text-green text-xs">
         +{Math.abs(positionOffset)}

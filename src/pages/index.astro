@@ -1,5 +1,5 @@
 ---
-import Icon from "../components/Icon.astro";
+import { IoSearch } from "react-icons/io5";
 import Trend from "../components/Trend.astro";
 import Layout from "../layouts/Layout.astro";
 import { supabase } from "../lib/supabase";
@@ -47,7 +47,7 @@ if (lastUpdate) {
               placeholder="Filter artist"
               aria-label="Filter artist"
             />
-            <Icon name="search" class="text-input absolute left-2.25" />
+            <IoSearch className="text-input absolute left-2.25" size={24} />
           </div>
         </div>
         <div class="overflow-x-auto pb-20 md:px-8">

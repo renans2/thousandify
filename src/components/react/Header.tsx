@@ -1,5 +1,11 @@
 import { useState, type ReactNode } from "react";
-import Icon from "./Icon";
+import { IoMdMenu } from "react-icons/io";
+import { RxCross2 } from "react-icons/rx";
+
+const ICON_PARAMS = {
+  size: 32,
+  className: "text-heading",
+};
 
 type Props = {
   links: { href: string; label: string }[];
@@ -51,11 +57,11 @@ export default function Header({ links, desktopActions, mobileActions }: Props) 
             aria-controls="mobile-nav"
             onClick={() => setMenuIsOpen((prev) => !prev)}
           >
-            <Icon
-              name={menuIsOpen ? "close" : "menu"}
-              size={32}
-              className="text-heading"
-            />
+            {menuIsOpen ? (
+              <RxCross2 {...ICON_PARAMS} />
+            ) : (
+              <IoMdMenu {...ICON_PARAMS} />
+            )}
           </button>
         </div>
         <h3 className="hidden md:block mt-2 text-description font-medium">

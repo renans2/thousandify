@@ -1,5 +1,5 @@
 import useLocalStorage from "../../hooks/useLocalStorage";
-import Icon from "./Icon";
+import { ImCross } from "react-icons/im";
 
 export default function Warning() {
   const {
@@ -23,7 +23,7 @@ export default function Warning() {
         className="absolute right-1 cursor-pointer rounded-4xl p-1"
         aria-label="Dismiss warning"
       >
-        <Icon name="cross" size={16} />
+        <ImCross />
       </button>
     </div>
   );

@@ -1,5 +1,5 @@
 ---
-import Icon from "./Icon.astro";
+import { FaGithub } from "react-icons/fa";
 import ThemeSwitch from "./ThemeSwitch.astro";
 import ReactHeader from "./react/Header";
 
@@ -20,7 +20,7 @@ const links = [
       aria-label="GitHub repository"
       class="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
     >
-      <Icon name="github" class="text-heading" />
+      <FaGithub size={24} className="text-heading" />
     </a>
   </Fragment>
   <Fragment slot="mobileActions">
@@ -32,7 +32,7 @@ const links = [
       aria-label="GitHub repository"
       class="p-1 cursor-pointer hover:bg-background-icon-hover rounded-lg"
     >
-      <Icon name="github" class="text-heading" />
+      <FaGithub size={24} className="text-heading" />
     </a>
   </Fragment>
 </ReactHeader>
