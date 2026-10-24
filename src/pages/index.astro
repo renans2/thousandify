@@ -42,7 +42,8 @@ if (lastUpdate) {
           </p>
           <div class="text-base w-full md:w-fit relative flex items-center">
             <input
-              class="search w-full border-2 border-input text-input placeholder-input/50 py-1 pl-10 rounded-lg md:rounded-full focus:outline-3 outline-border"
+              id="artist-search"
+              class="w-full border-2 border-input text-input placeholder-input/50 py-1 pl-10 rounded-lg md:rounded-full focus:outline-3 outline-border"
               type="text"
               placeholder="Filter artist"
               aria-label="Filter artist"
@@ -51,27 +52,42 @@ if (lastUpdate) {
           </div>
         </div>
         <div class="overflow-x-auto pb-20 md:px-8">
-          <table class="sortable w-full mt-5">
-            <thead class="bg-background z-1 cursor-pointer">
+          <table id="ranking" class="w-full mt-5">
+            <thead class="bg-background z-1 cursor-pointer select-none">
               <tr class="border-b-2 border-border text-table-data">
-                <th class="hover:bg-heading/10 text-center py-2 px-2 font-extrabold">
+                <th
+                  data-sort="position"
+                  class="hover:bg-heading/10 text-center py-2 px-2 font-extrabold"
+                >
                   #
                 </th>
-                <th class="hover:bg-heading/10 text-center py-2 px-0 font-extrabold">
+                <th
+                  data-sort="trend"
+                  class="hover:bg-heading/10 text-center py-2 px-0 font-extrabold"
+                >
                   Trend
                 </th>
-                <th class="hover:bg-heading/10 text-left py-1 pl-2 font-extrabold">
+                <th
+                  data-sort="artist"
+                  class="hover:bg-heading/10 text-left py-1 pl-2 font-extrabold"
+                >
                   Artist
                 </th>
-                <th class="hover:bg-heading/10 text-right py-1 px-2 font-extrabold">
+                <th
+                  data-sort="listeners"
+                  class="hover:bg-heading/10 text-right py-1 px-2 font-extrabold"
+                >
                   Listeners
                 </th>
-                <th class="hover:bg-heading/10 text-left py-1 px-2 font-extrabold">
+                <th
+                  data-sort="daily"
+                  class="hover:bg-heading/10 text-left py-1 px-2 font-extrabold"
+                >
                   Daily
                 </th>
               </tr>
             </thead>
-            <tbody class="list">
+            <tbody>
               {data.map(
                 ({
                   artist,
@@ -80,12 +96,19 @@ if (lastUpdate) {
                   position_offset,
                   monthly_listeners_daily_offset,
                 }) => (
-                  <tr class="hover:font-extrabold transition-transform border-b border-border text-table-data">
+                  <tr
+                    class="hover:font-extrabold transition-transform border-b border-border text-table-data"
+                    data-position={position}
+                    data-trend={position_offset === null ? "" : -position_offset}
+                    data-artist={artist.name.toLowerCase()}
+                    data-listeners={monthly_listeners}
+                    data-daily={monthly_listeners_daily_offset ?? ""}
+                  >
                     <td class="text-center py-1">{position}</td>
                     <td class="w-full block mx-auto py-1">
                       <Trend positionOffset={position_offset} />
                     </td>
-                    <td class="artist py-1 pl-2">
+                    <td class="py-1 pl-2">
                       <a
                         href={`https://open.spotify.com/artist/${artist.spotify_id}`}
                         target="_blank"
@@ -121,6 +144,11 @@ if (lastUpdate) {
                   </tr>
                 ),
               )}
+              <tr id="no-results" hidden>
+                <td colspan="5" class="text-center py-4 text-description">
+                  No artists found
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -128,13 +156,105 @@ if (lastUpdate) {
     )
   }
 
-  <!-- filter by artist name (list.js) and sort by column (sort-table.js, picks up
-  tables with the "sortable" class on its own) -->
-  <script
-    is:inline
-    defer
-    src="https://cdnjs.cloudflare.com/ajax/libs/list.js/2.3.1/list.min.js"
-    onload="document.getElementById('data') && new List('data', { valueNames: ['artist'] })"
-  ></script>
-  <script is:inline defer src="/sort-table.js"></script>
 </Layout>
+
+<script>
+  // sort by column and filter by artist name. Sorting reorders the rows and
+  // filtering only hides them, so one never undoes the other.
+  const table = document.getElementById("ranking") as HTMLTableElement | null;
+
+  if (table) {
+    const tbody = table.tBodies[0];
+    const noResults = document.getElementById("no-results")!;
+    const search = document.getElementById("artist-search") as HTMLInputElement;
+    const headers = [
+      ...table.querySelectorAll<HTMLTableCellElement>("th[data-sort]"),
+    ];
+    const rows = [...tbody.rows].filter((row) => row !== noResults);
+    let sort: { key: string; ascending: boolean } | null = null;
+
+    // empty values (e.g. NEW artists have no trend) are null and go last
+    function sortValue(row: HTMLTableRowElement, key: string) {
+      const raw = row.dataset[key];
+      if (!raw) return null;
+      return key === "artist" ? raw : Number(raw);
+    }
+
+    function compare(a: HTMLTableRowElement, b: HTMLTableRowElement) {
+      const x = sortValue(a, sort!.key);
+      const y = sortValue(b, sort!.key);
+      if (x === y) return Number(a.dataset.position) - Number(b.dataset.position);
+      if (x === null) return 1;
+      if (y === null) return -1;
+      const result =
+        typeof x === "string" ? x.localeCompare(y as string) : x - (y as number);
+      return sort!.ascending ? result : -result;
+    }
+
+    function applySort() {
+      tbody.prepend(...(sort ? rows.toSorted(compare) : rows));
+      for (const header of headers) {
+        const active = sort?.key === header.dataset.sort;
+        header.dataset.indicator = active ? (sort!.ascending ? "▲" : "▼") : "";
+        if (active) header.ariaSort = sort!.ascending ? "ascending" : "descending";
+        else header.removeAttribute("aria-sort");
+      }
+    }
+
+    function applyFilter() {
+      const query = search.value.trim().toLowerCase();
+      let visible = 0;
+      for (const row of rows) {
+        row.hidden = !row.dataset.artist!.includes(query);
+        if (!row.hidden) visible++;
+      }
+      noResults.hidden = visible > 0;
+    }
+
+    for (const header of headers) {
+      // each column cycles ascending -> descending -> unsorted (ranking order)
+      header.addEventListener("click", () => {
+        const key = header.dataset.sort!;
+        if (sort?.key !== key) sort = { key, ascending: true };
+        else if (sort.ascending) sort = { key, ascending: false };
+        else sort = null;
+        applySort();
+      });
+    }
+    search.addEventListener("input", applyFilter);
+    // the browser may restore the input's text on reload or back navigation
+    applyFilter();
+  }
+</script>
+
+<style>
+  /* every sortable header always keeps a fixed slot for the sort indicator, so
+  showing it never changes the column width or spills into the next cell */
+  th[data-sort]::before,
+  th[data-sort]::after {
+    display: inline-block;
+    width: 1.5em;
+    font-size: 0.6em;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  /* left-aligned: indicator after the text */
+  th[data-sort]::after {
+    content: attr(data-indicator);
+  }
+
+  /* centered: matching empty slot before the text keeps it centered */
+  th.text-center[data-sort]::before {
+    content: "";
+  }
+
+  /* right-aligned: indicator before the text, so it stays flush with the
+  numbers below */
+  th.text-right[data-sort]::before {
+    content: attr(data-indicator);
+  }
+  th.text-right[data-sort]::after {
+    content: none;
+  }
+</style>
