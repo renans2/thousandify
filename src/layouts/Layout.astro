@@ -2,7 +2,6 @@
 import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import Warning from "../components/react/Warning";
 ---
 
 <!doctype html>
@@ -14,6 +13,12 @@ import Warning from "../components/react/Warning";
     <meta
       name="description"
       content="Spotify Artists Ranking by monthly listeners (updated daily)"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap"
+      rel="stylesheet"
     />
     <!-- applies the theme before the first paint to avoid flicker; "theme" is
     the same key next-themes used, so saved preferences carry over -->
@@ -33,7 +38,6 @@ import Warning from "../components/react/Warning";
     </script>
   </head>
   <body class="bg-background h-screen">
-    <Warning client:load />
     <Header />
     <slot />
     <Footer />

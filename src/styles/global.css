@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource-variable/geist-mono";
 
 /* dark mode is driven by the "dark" class set from the theme script */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -73,5 +72,5 @@
 }
 
 body {
-  font-family: "Geist Mono Variable", "Times New Roman", Times, serif;
+  font-family: "Geist Mono", "Times New Roman", Times, serif;
 }
