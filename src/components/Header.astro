@@ -1,38 +1,30 @@
 ---
 import { FaGithub } from "react-icons/fa";
 import ThemeSwitch from "./ThemeSwitch.astro";
-import ReactHeader from "./react/Header";
-
-const path = Astro.url.pathname;
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-].filter(({ href }) => href !== path);
 ---
 
-<ReactHeader client:load links={links}>
-  <Fragment slot="desktopActions">
-    <ThemeSwitch />
-    <a
-      href="https://github.com/renans2/thousandify"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="GitHub repository"
-      class="p-2 rounded-full text-description hover:text-heading hover:bg-background-icon-hover cursor-pointer transition-colors"
-    >
-      <FaGithub size={20} />
+<header class="max-w-250 w-full mx-auto px-4 pt-4 pb-3.5 md:pt-8 md:pb-5 md:px-8">
+  <div class="flex items-center justify-between">
+    <a href="/">
+      <h1 class="font-display font-extrabold tracking-tight text-[1.75rem] leading-tight md:text-5xl title-gradient">
+        Thousandify
+      </h1>
     </a>
-  </Fragment>
-  <Fragment slot="mobileActions">
-    <ThemeSwitch />
-    <a
-      href="https://github.com/renans2/thousandify"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="GitHub repository"
-      class="p-2 rounded-full text-description hover:text-heading hover:bg-background-icon-hover cursor-pointer transition-colors"
-    >
-      <FaGithub size={20} />
-    </a>
-  </Fragment>
-</ReactHeader>
+    <div class="flex items-center p-1 rounded-full border border-divider bg-background/60 backdrop-blur-md shadow-[0_1px_2px_rgb(0_0_0/0.06)]">
+      <ThemeSwitch />
+      <a
+        href="https://github.com/renans2/thousandify"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub repository"
+        class="p-2 rounded-full text-description hover:text-heading hover:bg-background-icon-hover cursor-pointer transition-colors"
+      >
+        <FaGithub size={20} />
+      </a>
+    </div>
+  </div>
+  <p class="mt-2 text-sm md:text-base text-description font-medium">
+    <span class="text-gradient font-bold">Top 1000</span>{" "}
+    <span class="text-heading">Spotify artists</span> by monthly listeners
+  </p>
+</header>

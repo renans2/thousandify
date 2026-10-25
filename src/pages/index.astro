@@ -3,19 +3,11 @@ import { IoSearch } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
 import Trend from "../components/Trend.astro";
 import Layout from "../layouts/Layout.astro";
+import { getLastUpdate } from "../lib/lastUpdate";
 import { supabase } from "../lib/supabase";
 import type { ArtistDailyStat } from "../types/ArtistTypes";
 
-// the daily job doesn't run at midnight UTC, so "today" may have no data yet:
-// always show the most recent update instead
-const { data: lastUpdate, error: updateError } = await supabase
-  .from("update_logs")
-  .select("date")
-  .order("date", { ascending: false })
-  .order("time", { ascending: false })
-  .limit(1)
-  .maybeSingle();
-if (updateError) throw updateError;
+const lastUpdate = await getLastUpdate();
 
 let data: ArtistDailyStat[] = [];
 if (lastUpdate) {
@@ -28,6 +20,34 @@ if (lastUpdate) {
   data = stats ?? [];
 }
 
+// the data changes once a day, so Vercel's CDN can serve the page for an hour
+// (and a stale copy while it refetches) instead of querying on every request.
+// Set after the queries so errors are never cached
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, s-maxage=3600, stale-while-revalidate=86400",
+);
+
+const site = new URL("/", Astro.site).href;
+// WebSite gives Google the site name for results; Dataset describes the ranking
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebSite", name: "Thousandify", url: site },
+    {
+      "@type": "Dataset",
+      name: "Top 1000 Spotify Artists by Monthly Listeners",
+      description:
+        "Daily ranking of the 1000 artists with the most monthly listeners on Spotify, with each artist's position change and monthly listener change since the previous day.",
+      url: site,
+      isAccessibleForFree: true,
+      keywords: ["Spotify", "monthly listeners", "artists ranking", "music charts"],
+      creator: { "@type": "Person", name: "renans2", url: "https://github.com/renans2" },
+      ...(lastUpdate && { dateModified: lastUpdate.date }),
+    },
+  ],
+};
+
 const COLUMNS = [
   { key: "position", label: "#", align: "text-center" },
   { key: "trend", label: "Trend", align: "text-center" },
@@ -38,6 +58,7 @@ const COLUMNS = [
 ---
 
 <Layout>
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   {
     !lastUpdate ? (
       <p class="text-center text-heading font-medium pb-20">
@@ -96,7 +117,7 @@ const COLUMNS = [
             </div>
           </div>
         </div>
-        <div class="overflow-x-auto md:overflow-x-visible pb-20 px-1 md:px-8">
+        <div class="overflow-x-auto md:overflow-x-visible pb-12 px-1 md:px-8">
           <table id="ranking" role="table" class="w-full min-w-[23rem] mt-3">
             <thead role="rowgroup" class="md:sticky md:top-0 z-10 bg-background cursor-pointer select-none">
               <tr role="row">
@@ -188,6 +209,28 @@ const COLUMNS = [
             </tbody>
           </table>
         </div>
+        <section class="px-4 md:px-8 pb-20 max-w-180 text-sm text-description leading-relaxed">
+          <h2 class="mb-3 text-base font-bold text-heading">About this ranking</h2>
+          <p>
+            Thousandify ranks the 1000 most-listened artists on Spotify by
+            monthly listeners: the number of unique people who played an
+            artist at least once in the last 28 days. The ranking is updated
+            once a day.
+          </p>
+          <p class="mt-3">
+            <strong class="text-heading">Trend</strong> is how many positions
+            an artist moved since the previous update (<strong class="text-heading">NEW</strong>
+            if they just entered the top 1000) and
+            <strong class="text-heading">Daily</strong> is how many monthly
+            listeners they gained or lost. Click a column to sort by it, or
+            press <kbd class="px-1.5 rounded-md border border-divider text-xs">/</kbd>
+            to search for an artist.
+          </p>
+          <p class="mt-3">
+            Thousandify is an independent project and is not affiliated with
+            Spotify.
+          </p>
+        </section>
       </div>
     )
   }

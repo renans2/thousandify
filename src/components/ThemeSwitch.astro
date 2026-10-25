@@ -39,7 +39,6 @@ import { MdLightMode } from "react-icons/md";
     }
   }
 
-  // delegated, since the buttons live inside the React header island
   document.addEventListener("click", (event) => {
     if (!(event.target as Element).closest(".theme-switch")) return;
     const dark = !root.classList.contains("dark");
