@@ -1,6 +1,8 @@
 ---
 import { IoSearch } from "react-icons/io5";
 import { RxCross2 } from "react-icons/rx";
+import ListenersOffset from "../components/ListenersOffset.astro";
+import MoversTicker from "../components/MoversTicker.astro";
 import Trend from "../components/Trend.astro";
 import Layout from "../layouts/Layout.astro";
 import { getLastUpdate } from "../lib/lastUpdate";
@@ -109,6 +111,7 @@ const COLUMNS = [
             </div>
           </div>
         </div>
+        <MoversTicker stats={data} />
         <div class="overflow-x-auto md:overflow-x-visible pb-12 px-1 md:px-8">
           <table id="ranking" role="table" class="w-full min-w-[23rem] mt-3">
             <thead role="rowgroup" class="md:sticky md:top-0 z-10 bg-background cursor-pointer select-none">
@@ -172,23 +175,7 @@ const COLUMNS = [
                       {monthly_listeners.toLocaleString("en-US")}
                     </td>
                     <td role="cell" class="text-right py-1.5 px-1 md:px-2">
-                      {monthly_listeners_daily_offset !== null && (
-                        <span
-                          class:list={[
-                            "inline-block py-0.5 px-1.5 md:px-2 text-xs font-medium tabular-nums rounded-full",
-                            monthly_listeners_daily_offset > 0
-                              ? "bg-tag-bg-green text-tag-text-green"
-                              : monthly_listeners_daily_offset < 0
-                                ? "bg-tag-bg-red text-tag-text-red"
-                                : "bg-tag-bg-neutral text-tag-text-neutral",
-                          ]}
-                        >
-                          {monthly_listeners_daily_offset > 0 && "+"}
-                          {monthly_listeners_daily_offset.toLocaleString(
-                            "en-US",
-                          )}
-                        </span>
-                      )}
+                      <ListenersOffset offset={monthly_listeners_daily_offset} />
                     </td>
                   </tr>
                 ),

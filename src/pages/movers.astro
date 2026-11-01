@@ -1,0 +1,167 @@
+---
+import ListenersOffset from "../components/ListenersOffset.astro";
+import MoverRow from "../components/MoverRow.astro";
+import MoversCard from "../components/MoversCard.astro";
+import Trend from "../components/Trend.astro";
+import Layout from "../layouts/Layout.astro";
+import { getLastUpdate, getPreviousUpdate } from "../lib/lastUpdate";
+import { topMovers } from "../lib/movers";
+import { supabase } from "../lib/supabase";
+import type { Artist, ArtistDailyStat } from "../types/ArtistTypes";
+
+type PreviousStat = {
+  artist: Pick<Artist, "spotify_id" | "name">;
+  position: number;
+  monthly_listeners: number;
+};
+
+const TOP = 10;
+
+const lastUpdate = await getLastUpdate();
+const previousUpdate = lastUpdate && (await getPreviousUpdate(lastUpdate.date));
+
+let today: ArtistDailyStat[] = [];
+let previous: PreviousStat[] = [];
+if (lastUpdate) {
+  const [current, before] = await Promise.all([
+    supabase
+      .from("artists_daily_stats")
+      .select("*, artist(*)")
+      .eq("date", lastUpdate.date),
+    // only needed to find who left the top 1000
+    previousUpdate
+      ? supabase
+          .from("artists_daily_stats")
+          .select("position, monthly_listeners, artist(spotify_id, name)")
+          .eq("date", previousUpdate.date)
+      : null,
+  ]);
+  if (current.error) throw current.error;
+  if (before?.error) throw before.error;
+  today = current.data ?? [];
+  previous = (before?.data ?? []) as unknown as PreviousStat[];
+}
+
+const { gainers, losers, climbers, fallers } = topMovers(today, TOP);
+
+// with no earlier update to compare with, everyone would count as new
+const entered = previousUpdate
+  ? today
+      .filter((s) => s.position_offset === null)
+      .sort((a, b) => a.position - b.position)
+  : [];
+const todayIds = new Set(today.map((s) => s.artist.spotify_id));
+const left = previous
+  .filter((s) => !todayIds.has(s.artist.spotify_id))
+  .sort((a, b) => a.position - b.position);
+
+const noComparison = "No earlier update to compare with yet.";
+---
+
+<Layout
+  title="Daily Movers: Biggest Spotify Listener Gains and Losses | Thousandify"
+  description="The Spotify artists who gained and lost the most monthly listeners today, the biggest climbers and fallers in the top 1000, and who entered or left the ranking."
+>
+  {
+    !lastUpdate ? (
+      <p class="text-center text-heading font-medium pb-20">
+        No data available yet, check back later.
+      </p>
+    ) : (
+      <div class="max-w-250 mx-auto px-4 md:px-8 pt-2 pb-20">
+        <h2 class="text-lg md:text-xl font-bold text-heading">Daily movers</h2>
+        <p class="mt-1 text-sm text-description">
+          {previousUpdate ? (
+            <>
+              Changes from{" "}
+              <time datetime={previousUpdate.date} class="text-heading font-medium">
+                {previousUpdate.date}
+              </time>{" "}
+              to{" "}
+              <time datetime={lastUpdate.date} class="text-heading font-medium">
+                {lastUpdate.date}
+              </time>
+            </>
+          ) : (
+            noComparison
+          )}
+        </p>
+
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          <MoversCard
+            title="Biggest gains"
+            description="Most monthly listeners gained"
+            empty={!gainers.length && (previousUpdate ? "Nobody gained listeners." : noComparison)}
+          >
+            {gainers.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <ListenersOffset offset={s.monthly_listeners_daily_offset} />
+              </MoverRow>
+            ))}
+          </MoversCard>
+          <MoversCard
+            title="Biggest losses"
+            description="Most monthly listeners lost"
+            empty={!losers.length && (previousUpdate ? "Nobody lost listeners." : noComparison)}
+          >
+            {losers.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <ListenersOffset offset={s.monthly_listeners_daily_offset} />
+              </MoverRow>
+            ))}
+          </MoversCard>
+
+          <MoversCard
+            title="Biggest climbers"
+            description="Most positions gained in the ranking"
+            empty={!climbers.length && (previousUpdate ? "Nobody moved up." : noComparison)}
+          >
+            {climbers.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <Trend positionOffset={s.position_offset} />
+              </MoverRow>
+            ))}
+          </MoversCard>
+          <MoversCard
+            title="Biggest fallers"
+            description="Most positions lost in the ranking"
+            empty={!fallers.length && (previousUpdate ? "Nobody moved down." : noComparison)}
+          >
+            {fallers.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <Trend positionOffset={s.position_offset} />
+              </MoverRow>
+            ))}
+          </MoversCard>
+
+          <MoversCard
+            title={`New entries${entered.length ? ` (${entered.length})` : ""}`}
+            description="Joined the top 1000, with their monthly listeners"
+            empty={!entered.length && (previousUpdate ? "No new artists today." : noComparison)}
+          >
+            {entered.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <span class="text-description tabular-nums">
+                  {s.monthly_listeners.toLocaleString("en-US")}
+                </span>
+              </MoverRow>
+            ))}
+          </MoversCard>
+          <MoversCard
+            title={`Dropped out${left.length ? ` (${left.length})` : ""}`}
+            description="Left the top 1000, with their last position and listeners"
+            empty={!left.length && (previousUpdate ? "Nobody left the top 1000." : noComparison)}
+          >
+            {left.map((s) => (
+              <MoverRow position={s.position} artist={s.artist}>
+                <span class="text-description tabular-nums">
+                  {s.monthly_listeners.toLocaleString("en-US")}
+                </span>
+              </MoverRow>
+            ))}
+          </MoversCard>
+        </div>
+      </div>
+    )
+  }
+</Layout>

@@ -1,0 +1,34 @@
+---
+import type { Artist } from "../types/ArtistTypes";
+
+interface Props {
+  position: number;
+  artist: Pick<Artist, "spotify_id" | "name">;
+}
+
+const { position, artist } = Astro.props;
+---
+
+<li class="flex items-center gap-2 md:gap-3 py-1.5 border-b border-divider last:border-b-0 text-table-data">
+  <span class="w-8 shrink-0 text-center tabular-nums">
+    {
+      position <= 3 ? (
+        <span class={`medal medal-${position} size-5 md:size-6 text-xs`}>{position}</span>
+      ) : (
+        position
+      )
+    }
+  </span>
+  <a
+    href={`https://open.spotify.com/artist/${artist.spotify_id}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    title={`${artist.name}'s Spotify profile`}
+    class="flex-1 min-w-0 truncate underline decoration-heading/20 underline-offset-4 hover:decoration-accent hover:text-heading transition-colors"
+  >
+    {artist.name}
+  </a>
+  <span class="shrink-0">
+    <slot />
+  </span>
+</li>

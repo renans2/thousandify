@@ -1,0 +1,120 @@
+---
+import { IoArrowForward } from "react-icons/io5";
+import { topMovers } from "../lib/movers";
+import type { ArtistDailyStat } from "../types/ArtistTypes";
+import ListenersOffset from "./ListenersOffset.astro";
+import Trend from "./Trend.astro";
+
+interface Props {
+  stats: ArtistDailyStat[];
+}
+
+const { gainers, losers, climbers, fallers } = topMovers(Astro.props.stats, 1);
+const items = [
+  { label: "Top gainer", stat: gainers[0], kind: "listeners" },
+  { label: "Top loser", stat: losers[0], kind: "listeners" },
+  { label: "Top climber", stat: climbers[0], kind: "position" },
+  { label: "Top faller", stat: fallers[0], kind: "position" },
+].filter((item) => item.stat);
+---
+
+{
+  items.length > 0 && (
+    <div class="ticker relative mt-4 mx-4 md:mx-8 overflow-hidden border border-divider bg-background/60 backdrop-blur-md shadow-[0_1px_2px_rgb(0_0_0/0.06)]">
+      <div class="ticker-viewport overflow-hidden">
+        <div class="ticker-track flex w-max">
+          {/* the second copy makes the loop seamless; inert hides it from
+          screen readers so each item is read once */}
+          {[false, true].map((copy) => (
+            <ul class="ticker-group flex shrink-0 items-center justify-around" inert={copy}>
+              {items.map(({ label, stat, kind }) => (
+                <li class="flex items-center">
+                  <div class="flex items-center gap-2 px-4 md:px-6 py-2 whitespace-nowrap text-xs md:text-sm">
+                    <span class="text-[0.65rem] md:text-xs font-bold uppercase tracking-wider text-description">
+                      {label}
+                    </span>
+                    <span class="font-medium text-heading">{stat.artist.name}</span>
+                    {kind === "listeners" ? (
+                      <ListenersOffset offset={stat.monthly_listeners_daily_offset} />
+                    ) : (
+                      <Trend positionOffset={stat.position_offset} />
+                    )}
+                  </div>
+                  <span class="size-1 rounded-full bg-divider" aria-hidden="true" />
+                </li>
+              ))}
+            </ul>
+          ))}
+        </div>
+      </div>
+      {/* floats over the right end of the track; the gradient before it lets
+      the items slide under it instead of being cut off */}
+      <a
+        href="/movers"
+        class="group absolute inset-y-0 right-0 flex items-center gap-1.5 pl-3 pr-5 md:pl-4 md:pr-6 bg-background before:absolute before:inset-y-0 before:right-full before:w-8 before:bg-linear-to-l before:from-background before:to-transparent before:pointer-events-none text-xs md:text-sm font-bold uppercase tracking-wider"
+      >
+        <span class="text-gradient">See all</span>
+        {/* an icon can't take a gradient text color, so it gets the last stop */}
+        <IoArrowForward className="text-accent-3 group-hover:translate-x-0.5 transition-transform" />
+      </a>
+    </div>
+  )
+}
+
+<style>
+  /* fade the items, and the border with them, in and out at the edges */
+  .ticker {
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 1rem,
+      #000 calc(100% - 1rem),
+      transparent
+    );
+  }
+
+  .ticker-viewport {
+    container-type: inline-size;
+  }
+
+  /* each copy is at least as wide as the viewport, so there is never a gap */
+  .ticker-group {
+    min-width: 100cqw;
+  }
+
+  .ticker-track {
+    animation: ticker 35s linear infinite;
+  }
+
+  .ticker:hover .ticker-track,
+  .ticker:focus-within .ticker-track {
+    animation-play-state: paused;
+  }
+
+  /* moving one copy's width lines the second copy up where the first started */
+  @keyframes ticker {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* no movement: a single copy that can be scrolled by hand */
+  @media (prefers-reduced-motion: reduce) {
+    .ticker {
+      mask-image: none;
+    }
+    .ticker-viewport {
+      overflow-x: auto;
+    }
+    .ticker-track {
+      animation: none;
+    }
+    .ticker-group[inert] {
+      display: none;
+    }
+    /* room to scroll the last item out from under the "See all" button */
+    .ticker-group {
+      padding-right: 8rem;
+    }
+  }
+</style>

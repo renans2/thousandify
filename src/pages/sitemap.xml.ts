@@ -11,6 +11,10 @@ export const GET: APIRoute = async ({ site }) => {
     <changefreq>daily</changefreq>
   </url>
   <url>
+    <loc>${new URL("/movers", site)}</loc>${lastUpdate ? `\n    <lastmod>${lastUpdate.date}</lastmod>` : ""}
+    <changefreq>daily</changefreq>
+  </url>
+  <url>
     <loc>${new URL("/about", site)}</loc>
   </url>
 </urlset>
