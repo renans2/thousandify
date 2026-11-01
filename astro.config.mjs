@@ -8,7 +8,16 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   site: "https://thousandify.renan.foo",
   output: "server",
-  adapter: vercel(),
+  // pages are rendered once and cached on Vercel's CDN until the scraper
+  // revalidates them (a request with the bypass token in the
+  // x-prerender-revalidate header); the expiration is a fallback in case the
+  // scraper's request never arrives
+  adapter: vercel({
+    isr: {
+      bypassToken: process.env.ISR_BYPASS_TOKEN,
+      expiration: 60 * 60 * 12,
+    },
+  }),
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
