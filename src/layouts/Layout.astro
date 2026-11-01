@@ -5,13 +5,13 @@ import Header from "../components/Header.astro";
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
 const {
   title = "Top 1000 Spotify Artists by Monthly Listeners | Thousandify",
+  description = "Ranking of the 1000 most-listened artists on Spotify by monthly listeners, updated daily, with each artist's position change and daily listener gains and losses.",
 } = Astro.props;
-const description =
-  "Ranking of the 1000 most-listened artists on Spotify by monthly listeners, updated daily, with each artist's position change and daily listener gains and losses.";
 // without the query string, so filtered or tracked links count as the same page
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const image = new URL("/og.png", Astro.site);

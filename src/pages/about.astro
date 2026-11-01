@@ -1,0 +1,38 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// no data on this page, so it's built once as static HTML
+export const prerender = true;
+---
+
+<Layout
+  title="About | Thousandify"
+  description="How Thousandify ranks the top 1000 Spotify artists by monthly listeners, and what the Trend and Daily columns mean."
+>
+  <section class="max-w-250 mx-auto px-4 md:px-8 pt-4 pb-20 text-sm md:text-base text-description leading-relaxed">
+    <h2 class="mb-3 text-lg md:text-xl font-bold text-heading">About this ranking</h2>
+    <p>
+      Thousandify ranks the 1000 most-listened artists on Spotify by monthly
+      listeners: the number of unique people who played an artist at least
+      once in the last 28 days. The ranking is updated once a day.
+    </p>
+    <p class="mt-3">
+      <strong class="text-heading">Trend</strong> is how many positions an
+      artist moved since the previous update (<strong class="text-heading">NEW</strong>{" "}
+      if they just entered the top 1000) and{" "}
+      <strong class="text-heading">Daily</strong> is how many monthly listeners
+      they gained or lost. Click a column to sort by it, or press{" "}
+      <kbd class="px-1.5 rounded-md border border-divider text-xs">/</kbd> to
+      search for an artist.
+    </p>
+    <p class="mt-3">
+      Thousandify is an independent project and is not affiliated with Spotify.
+    </p>
+    <a
+      href="/"
+      class="inline-block mt-8 px-5 py-2.5 rounded-full border border-divider bg-background/60 text-sm font-medium text-heading hover:bg-background-icon-hover transition-colors"
+    >
+      Back to the ranking
+    </a>
+  </section>
+</Layout>

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { getLastUpdate } from "../lib/lastUpdate";
 
-// the ranking is the only page; lastmod tells crawlers when the data changed
+// lastmod tells crawlers when the ranking data changed
 export const GET: APIRoute = async ({ site }) => {
   const lastUpdate = await getLastUpdate();
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -9,6 +9,9 @@ export const GET: APIRoute = async ({ site }) => {
   <url>
     <loc>${new URL("/", site)}</loc>${lastUpdate ? `\n    <lastmod>${lastUpdate.date}</lastmod>` : ""}
     <changefreq>daily</changefreq>
+  </url>
+  <url>
+    <loc>${new URL("/about", site)}</loc>
   </url>
 </urlset>
 `;
