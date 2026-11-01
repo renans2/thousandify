@@ -1,33 +1,61 @@
-# Thousandify
+<p align="center">
+  <a href="https://thousandify.renan.foo">
+    <img src=".github/cover.png" alt="Thousandify: the top 1000 Spotify artists by monthly listeners, with today's biggest movers" width="100%" />
+  </a>
+</p>
 
-Top 1000 Spotify artists by monthly listeners, updated daily. Built with
-[Astro](https://astro.build) and [Supabase](https://supabase.com), deployed on
-Vercel with Incremental Static Regeneration: pages are rendered once and served
-from the CDN until the scraper revalidates them after each daily run (or 12
-hours pass).
+<p align="center">
+  <b>The 1000 most-listened artists on Spotify, ranked by monthly listeners and updated every day.</b>
+  <br />
+  <a href="https://thousandify.renan.foo"><b>thousandify.renan.foo</b></a>
+</p>
 
-## Setup
+---
 
-Create a `.env` file:
+## What you'll find
 
-```sh
-SUPABASE_URL=...
-SUPABASE_PUBLISHABLE_KEY=...
-```
+### 🏆 The ranking
 
-On Vercel, also set `ISR_BYPASS_TOKEN` (a random string of at least 32
-characters, e.g. `openssl rand -hex 32`) and redeploy. The scraper needs the
-same value to revalidate the pages:
+All 1000 artists in one table, from the biggest names down to the ones fighting
+to stay in. For each artist you see:
 
-```sh
-curl -H "x-prerender-revalidate: $ISR_BYPASS_TOKEN" https://thousandify.renan.foo/
-```
+| Column | What it means |
+| :-- | :-- |
+| **#** | Position today. The top 3 get gold, silver and bronze. |
+| **Trend** | How many positions they moved since the previous day, or **NEW** if they just entered. |
+| **Listeners** | Monthly listeners: unique people who played them at least once in the last 28 days. |
+| **Daily** | How many monthly listeners they gained or lost since the previous day. |
 
-## Commands
+Click any column to sort by it, or press <kbd>/</kbd> to search for an artist.
 
-| Command           | Action                                     |
-| :---------------- | :----------------------------------------- |
-| `npm install`     | Install dependencies                       |
-| `npm run dev`     | Start the dev server at `localhost:4321`   |
-| `npm run build`   | Build for Vercel (output in `.vercel/`)    |
-| `npm run check`   | Type-check the project                     |
+### 📈 Daily movers
+
+A scrolling bar above the ranking shows the day's top gainer, loser, climber
+and faller. The [movers page](https://thousandify.renan.foo/movers) goes deeper,
+with six lists:
+
+- **Biggest gains** and **biggest losses** in monthly listeners
+- **Biggest climbers** and **biggest fallers** in the ranking
+- **New entries**: who made it into the top 1000 today
+- **Dropped out**: who fell out, with the position they left from
+
+### 🌗 Light and dark
+
+It follows your system theme, or you can switch it from the header.
+
+## Built with
+
+[Astro](https://astro.build) ·
+[Tailwind CSS](https://tailwindcss.com) ·
+[Supabase](https://supabase.com) ·
+[Vercel](https://vercel.com)
+
+---
+
+<p align="center">
+  <sub>
+    Made by <a href="https://github.com/renans2">renans2</a> ·
+    <a href="LICENSE">MIT License</a> ·
+    Thousandify is an independent project and is not affiliated with Spotify.
+  </sub>
+</p>
