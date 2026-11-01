@@ -1,0 +1,25 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// built once as static HTML, so unknown URLs never reach Supabase
+export const prerender = true;
+---
+
+<Layout title="Page not found | Thousandify">
+  <meta slot="head" name="robots" content="noindex" />
+  <div class="max-w-250 mx-auto px-4 md:px-8 pt-16 pb-24 flex flex-col items-center text-center">
+    <p class="text-7xl md:text-9xl font-extrabold tracking-tight text-gradient">404</p>
+    <h2 class="mt-4 text-xl md:text-2xl font-semibold text-heading">
+      This artist didn't make the cut
+    </h2>
+    <p class="mt-2 text-sm md:text-base text-description">
+      The page you're looking for doesn't exist.
+    </p>
+    <a
+      href="/"
+      class="mt-8 px-5 py-2.5 rounded-full border border-divider bg-background/60 text-sm font-medium text-heading hover:bg-background-icon-hover transition-colors"
+    >
+      Back to the ranking
+    </a>
+  </div>
+</Layout>
